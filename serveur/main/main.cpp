@@ -9,7 +9,22 @@ using namespace std;
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
-    ServeurTcp serveur(4000);
+    if (argc != 2) {
+        cout << "Error: you must start the program this way -> ./serveur [client|serveur]" << endl;
+        exit(1);
+    }
 
-    return app.exec();
+    if (string(argv[1]) == "serveur") {
+        ServeurTcp serveur(4000);
+        return app.exec();
+    } else if (string(argv[1]) == "client") {
+        ClientTcp client(QString("127.0.0.1"), 4000, QString("Etienne"));
+        QFuture<void> future = QtConcurrent::run(&client, &ClientTcp::run);
+        /*while (!future.isFinished())
+            QCoreApplication::processEvents();*/
+        return app.exec();
+    } else {
+        cout << "Error: you must start the program this way -> ./serveur [client|serveur]" << endl;
+        exit(1);
+    }
 }

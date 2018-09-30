@@ -6,14 +6,16 @@
 #include <QtNetwork>
 #include <QString>
 #include <iostream>
+#include <unistd.h>
 
 using namespace std;
 
 class ClientTcp : public QObject {
     Q_OBJECT
     public: 
-	    ClientTcp(QString ip, int port=4000);
+	    ClientTcp(QString ip, int port, QString _pseudo);
         ~ClientTcp();
+        void run();
     private slots:
         void donneesRecues();
         void connecte();
@@ -28,6 +30,11 @@ class ClientTcp : public QObject {
 	    QTcpSocket* soc;
         // Taille du message
         quint16 tailleMessage;
+        // Pseudo de l'utilisateur
+        QString pseudo;
+
+        // Method to send a message to the server
+        void send(QString msg);
 };
 
 

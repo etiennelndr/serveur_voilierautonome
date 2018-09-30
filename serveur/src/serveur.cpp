@@ -5,8 +5,10 @@ ServeurTcp::ServeurTcp(int port) {
         cout << "Server: OFF" << endl;
     } else {
         cout << "Server: ON" << endl;
-         connect(this, SIGNAL(newConnection()), this, SLOT(demandeConnexion()));
+        connect(this, SIGNAL(newConnection()), this, SLOT(demandeConnexion()));
     }
+
+    tailleMessage = 0;
 }
 
 ServeurTcp::~ServeurTcp() {
@@ -49,6 +51,8 @@ void ServeurTcp::donneesRecues() {
     QString message;
     in >> message;
 
+    cout << message.toStdString() << endl;
+
     // On renvoie le message à tous les clients
     envoyerATous(message);
 
@@ -70,6 +74,7 @@ void ServeurTcp::deconnexionClient() {
 }
 
 void ServeurTcp::envoyerATous(const QString &message) {
+    cout << message.toStdString() << endl;
     // Préparation du paquet
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
