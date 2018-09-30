@@ -13,15 +13,15 @@ using namespace std;
 
 class ServeurTcp : public QTcpServer {
     Q_OBJECT
-    public :
+    public:
 	    ServeurTcp(int port);
 		~ServeurTcp();
 		void envoyerATous(const QString &message);
-	private slots :
+	private slots:
 		void demandeConnexion();
 		void donneesRecues();
 		void deconnexionClient();
-    private :
+    private:
 	    QList<QTcpSocket *> clients;
 		quint16 tailleMessage;
 };

@@ -10,10 +10,11 @@ ServeurTcp::ServeurTcp(int port) {
 }
 
 ServeurTcp::~ServeurTcp() {
+    qDeleteAll(clients);
 }
 
 void ServeurTcp::demandeConnexion() {
-    envoyerATous(tr("<em>Un client vient de se connecter</em>"));
+    envoyerATous(tr("Un client vient de se connecter"));
 
     // On crée une nouvelle socket pour ce client
 	QTcpSocket *nouveauClient = nextPendingConnection();
@@ -56,7 +57,7 @@ void ServeurTcp::donneesRecues() {
 }
 
 void ServeurTcp::deconnexionClient() {
-    envoyerATous(tr("<em>Un client vient de se déconnecter</em>"));
+    envoyerATous(tr("Un client vient de se déconnecter"));
 
     // On détermine quel client se déconnecte
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
