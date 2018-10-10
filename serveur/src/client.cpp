@@ -2,8 +2,8 @@
 
 ClientTcp::ClientTcp(QString ip, int port, QString _pseudo) {
 	serverPort = port; // choix arbitraire (>1024)
-	serverIp = ip;
-	pseudo = _pseudo;
+    serverIp   = ip;
+    pseudo     = _pseudo;
 
 	soc = new QTcpSocket(this);
 

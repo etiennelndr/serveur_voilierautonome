@@ -6,7 +6,6 @@
 #include <QtGui>
 #include <QtNetwork>
 #include <QString>
-#include <QtConcurrentRun>
 #include <iostream>
 
 using namespace std;

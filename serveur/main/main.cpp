@@ -2,6 +2,7 @@
 #include "serveur.h"
 
 #include <QApplication>
+//#include <QtConcurrentRun>
 #include <iostream>
 
 using namespace std;
@@ -20,8 +21,6 @@ int main(int argc, char* argv[]) {
     } else if (string(argv[1]) == "client") {
         ClientTcp client(QString("127.0.0.1"), 4000, QString("Etienne"));
         QFuture<void> future = QtConcurrent::run(&client, &ClientTcp::run);
-        /*while (!future.isFinished())
-            QCoreApplication::processEvents();*/
         return app.exec();
     } else {
         cout << "Error: you must start the program this way -> ./serveur [client|serveur]" << endl;
