@@ -17,6 +17,7 @@ class ServeurTcp : public QTcpServer {
 	    ServeurTcp(int port);
 		~ServeurTcp();
 		void envoyerATous(const QString &message);
+        void envoyerATousSauf(const QString &message, const QTcpSocket* client);
 	private slots:
 		void demandeConnexion();
 		void donneesRecues();

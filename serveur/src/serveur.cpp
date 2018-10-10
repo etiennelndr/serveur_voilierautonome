@@ -54,19 +54,19 @@ void ServeurTcp::donneesRecues() {
     cout << message.toStdString() << endl;
 
     // On renvoie le message à tous les clients
-    envoyerATous(message);
+    envoyerATousSauf(message, socket);
 
     // Remise de la taille du message à 0 pour permettre la réception des futurs messages
     tailleMessage = 0;
 }
 
 void ServeurTcp::deconnexionClient() {
-    envoyerATous(tr("Un client vient de se déconnecter"));
-
     // On détermine quel client se déconnecte
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
     if (socket == 0) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
         return;
+
+    envoyerATousSauf(tr("Un client vient de se déconnecter"), socket);
 
     clients.removeOne(socket);
 
@@ -74,7 +74,6 @@ void ServeurTcp::deconnexionClient() {
 }
 
 void ServeurTcp::envoyerATous(const QString &message) {
-    cout << message.toStdString() << endl;
     // Préparation du paquet
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
@@ -88,5 +87,24 @@ void ServeurTcp::envoyerATous(const QString &message) {
     // Envoi du paquet préparé à tous les clients connectés au serveur
     for (int i = 0; i < clients.size(); i++) {
         clients[i]->write(paquet);
+    }
+}
+
+void ServeurTcp::envoyerATousSauf(const QString &message, const QTcpSocket* client) {
+    // Préparation du paquet
+    QByteArray paquet;
+    QDataStream out(&paquet, QIODevice::WriteOnly);
+
+    out << (quint16) 0;    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
+    out << message;        // On ajoute le message à la suite
+    out.device()->seek(0); // On se replace au début du paquet
+    out << (quint16) (paquet.size() - sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
+
+
+    // Envoi du paquet préparé à tous les clients connectés au serveur
+    for (int i = 0; i < clients.size(); i++) {
+        if (clients[i] != client) {
+            clients[i]->write(paquet);
+        }
     }
 }
