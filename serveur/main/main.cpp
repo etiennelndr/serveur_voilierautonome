@@ -4,11 +4,26 @@
 #include <QApplication>
 //#include <QtConcurrentRun>
 #include <iostream>
+#include <string>
+
+#include "message.h"
 
 using namespace std;
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
+
+    Message* msg = new Message();
+
+    QString data("__&type_B&__");
+
+    msg->decodeData(data);
+
+    if (!msg->getError()) {
+        cout << *msg->getType() << endl;;
+    }
+
+    return 0;
 
     if (argc != 2) {
         cout << "Error: you must start the program this way -> ./serveur [client|serveur]" << endl;

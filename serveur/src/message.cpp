@@ -1,5 +1,13 @@
 #include "message.h"
 
+Message::Message() {
+    error = false;
+}
+
+Message::~Message() {
+
+}
+
 // Encodeur et décodeur pour l'UART et le TCP/IP
 QString Message::encodeData() {
     // Initialisation de la trame
@@ -60,14 +68,70 @@ QString Message::encodeData() {
     return QString::fromStdString(msg);
 }
 
-void Message::decodeData() {
+void Message::decodeData(QString msg) {
+    // Concert from QString to string
+    string data = msg.toStdString();
 
+    // Split the data (for each '&' character we split the data)
+    vector<string> splitData = splitMessage(data, (char)(*"&"));
+
+    // If we don't have correct symbols at the beginning and the end
+    // of the data we MUST return an error
+    if (splitData[0] != "__" || splitData[splitData.size()-1] != "__") {
+        error = true;
+        return;
+    }
+
+    for (unsigned int i=1; i < splitData.size()-1; i++) {
+        assignValueToCorrectAttribute(splitData[i]);
+    }
 }
 
-vector<string> Message::splitMessage(const string& s, char delimiter) {
+/**
+ * @brief Message::assignValueToCorrectAttribute : used for attribute value assignment
+ * @param s
+ */
+void Message::assignValueToCorrectAttribute(string& data) {
+    // First of all we need to split the data
+    vector<string> dataAndValue = splitMessage(data, (char)(*"_"));
+
+    if (dataAndValue[0] == "type") {
+        type = new string(dataAndValue[1]);
+    } else if (dataAndValue[0] == "id_sender") {
+        id_sender = new int(stoi(dataAndValue[1]));
+    } else if (dataAndValue[0] == "id_dest") {
+        id_dest = new int(stoi(dataAndValue[1]));
+    } else if (dataAndValue[0] == "id_concern") {
+        id_concern = new int(stoi(dataAndValue[1]));
+    } else if (dataAndValue[0] == "longitude") {
+        longitude = new float(stof(dataAndValue[1]));
+    } else if (dataAndValue[0] == "latitude") {
+        latitude = new float(stof(dataAndValue[1]));
+    } else if (dataAndValue[0] == "cap") {
+        cap = new float(stof(dataAndValue[1]));
+    } else if (dataAndValue[0] == "vitesse") {
+        vitesse = new float(stof(dataAndValue[1]));
+    } else if (dataAndValue[0] == "gite") {
+        gite = new float(stof(dataAndValue[1]));
+    } else if (dataAndValue[0] == "tangage") {
+        tangage = new float(stof(dataAndValue[1]));
+    } else if (dataAndValue[0] == "barre") {
+        barre = new float(stof(dataAndValue[1]));
+    } else if (dataAndValue[0] == "ecoute") {
+        ecoute = new float(stof(dataAndValue[1]));
+    }
+}
+
+/**
+ * @brief Message::splitMessage : this method is useful to split encoding message
+ * @param s
+ * @param delimiter
+ * @return
+ */
+vector<string> Message::splitMessage(string& data, char delimiter) {
    vector<string> tokens;
    string token;
-   istringstream tokenStream(s);
+   istringstream tokenStream(data);
    while (getline(tokenStream, token, delimiter)) {
       tokens.push_back(token);
    }
