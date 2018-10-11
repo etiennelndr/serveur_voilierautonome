@@ -5,7 +5,18 @@ Message::Message() {
 }
 
 Message::~Message() {
-
+    delete type;
+    delete id_sender;
+    delete id_dest;
+    delete id_concern;
+    delete longitude;
+    delete latitude;
+    delete cap;
+    delete vitesse;
+    delete gite;
+    delete tangage;
+    delete barre;
+    delete ecoute;
 }
 
 // Encodeur et décodeur pour l'UART et le TCP/IP
@@ -93,7 +104,7 @@ void Message::decodeData(QString msg) {
  */
 void Message::assignValueToCorrectAttribute(string& data) {
     // First of all we need to split the data
-    vector<string> dataAndValue = splitMessage(data, (char)(*"_"));
+    vector<string> dataAndValue = splitMessage(data, (char)(*":"));
 
     if (dataAndValue[0] == "type") {
         type = new string(dataAndValue[1]);

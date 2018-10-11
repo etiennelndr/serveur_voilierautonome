@@ -23,6 +23,8 @@ int main(int argc, char* argv[]) {
         cout << *msg->getType() << endl;;
     }
 
+    delete msg;
+
     return 0;
 
     if (argc != 2) {

@@ -1,5 +1,5 @@
 #ifndef SERVEUR_H
-#define SERVEUR_H
+#define SERVEUR_H 1
 
 
 #include <QObject>
