@@ -2,7 +2,7 @@
 #include "serveur.h"
 
 #include <QApplication>
-//#include <QtConcurrentRun>
+#include <QtConcurrentRun>
 #include <iostream>
 #include <string>
 
@@ -15,19 +15,19 @@ int main(int argc, char* argv[]) {
 
     Message* msg = new Message();
 
-    QString data("__&type_B&__");
+    QString data("__&type:A&__");
 
     msg->decodeData(data);
 
     if (!msg->getError()) {
-        cout << *msg->getType() << endl;;
+        cout << *msg->getType() << endl;
     }
 
     delete msg;
 
     return 0;
 
-    if (argc != 2) {
+    /*if (argc != 2) {
         cout << "Error: you must start the program this way -> ./serveur [client|serveur]" << endl;
         exit(1);
     }
@@ -41,6 +41,6 @@ int main(int argc, char* argv[]) {
         return app.exec();
     } else {
         cout << "Error: you must start the program this way -> ./serveur [client|serveur]" << endl;
-        exit(1);
-    }
+        return 0;
+    }*/
 }

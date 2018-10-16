@@ -74,9 +74,11 @@ class Message {
         // Ecoute du bateau
         float* ecoute;
 
+        // Séparateur entre le nom de la donnée et la valeur de celle-ci
+        char SEPARATOR = (char)*":";
+
         // Permet de vérifier si un erreur est apparue lors du décodage d'un message
         bool error;
-
 
         // This method is useful to split encoding message
         vector<string> splitMessage(string& data, char delimiter);
