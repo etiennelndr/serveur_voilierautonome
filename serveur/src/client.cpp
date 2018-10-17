@@ -4,6 +4,7 @@ ClientTcp::ClientTcp(QString ip, quint16 port, QString _pseudo) {
 	serverPort = port; // choix arbitraire (>1024)
     serverIp   = ip;
     pseudo     = _pseudo;
+    isRunning  = true;
 
 	soc = new QTcpSocket(this);
 
@@ -23,11 +24,10 @@ ClientTcp::~ClientTcp() {
 }
 
 void ClientTcp::run() {
-    while (true) {
-        Message* msg = new Message();
-		cout << "Write here: ";
-        msg->setType(new string("B"));
-        send(msg->encodeData());
+    while (isRunning) {
+        Message msg;
+        msg.setType(new string("B"));
+        send(msg.encodeData());
         QThread::sleep(3);
     }
 }
@@ -99,4 +99,6 @@ void ClientTcp::erreurSocket(QAbstractSocket::SocketError erreur) {
         default:
             cout << "\nERREUR : " << soc->errorString().toStdString() << endl;
     }
+    // Stop run method
+    isRunning = false;
 }

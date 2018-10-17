@@ -35,6 +35,8 @@ class ClientTcp : public QObject {
         // Pseudo de l'utilisateur
         QString pseudo;
 
+        bool isRunning;
+
         // Method to send a message to the server
         void send(QString msg);
 };
