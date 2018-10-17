@@ -1,2 +1,2 @@
-# ihm_voilierautonome
-Développement d'une IHM pour la gestion d'un voilier autonome
+﻿# serveur_voilierautonome
+Développement d'un serveur pour la gestion d'un voilier autonome
