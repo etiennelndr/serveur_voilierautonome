@@ -50,29 +50,29 @@ class Message {
 
     private:
         // Type (B, M ou S)
-        string* type;
+        string* type=nullptr ;
         // Id de l'objet qui envoie -> 1, 2, ... pour bateaux, 0 pour serveur,  -1, -2, ... pour stations météos
-        int* id_sender;
+        int* id_sender=nullptr ;
         // Id de l'objet qui doit recevoir
-        int* id_dest;
+        int* id_dest=nullptr ;
         // Id de l'objet concerné
-        int* id_concern;
+        int* id_concern=nullptr ;
         // Position GPS: longitude (du vent ou du bateau)
-        float* longitude;
+        float* longitude=nullptr ;
         // Position GPS: latitude (du vent ou du bateau)
-        float* latitude;
+        float* latitude=nullptr ;
         // Cap (du vent ou du bateau)
-        float* cap;
+        float* cap=nullptr ;
         // Vitesse (du vent ou du bateau)
-        float* vitesse;
+        float* vitesse=nullptr ;
         // Gite du bateau
-        float* gite;
+        float* gite=nullptr ;
         // Tangage du bateau
-        float* tangage;
+        float* tangage=nullptr ;
         // Barre du bateau
-        float* barre;
+        float* barre=nullptr ;
         // Ecoute du bateau
-        float* ecoute;
+        float* ecoute=nullptr ;
 
         // Séparateur entre le nom de la donnée et la valeur de celle-ci
         char SEPARATOR = (char)*":";
