@@ -14,6 +14,7 @@
 **/Browse.VC.db
 **/.qmake.stash
 **/slnx.sqlite
+**/moc_*
 
 # Prerequisites
 *.d
