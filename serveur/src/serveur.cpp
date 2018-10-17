@@ -13,6 +13,7 @@ ServeurTcp::ServeurTcp(quint16 port) {
 
 ServeurTcp::~ServeurTcp() {
     qDeleteAll(clients);
+    cout << "Server: OFF" << endl;
 }
 
 void ServeurTcp::demandeConnexion() {

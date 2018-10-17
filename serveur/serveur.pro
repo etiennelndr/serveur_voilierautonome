@@ -8,11 +8,16 @@ DEPENDPATH += . include main src
 INCLUDEPATH += . include
 
 # Input
-HEADERS += include/client.h include/serveur.h \
-    include/message.h
-SOURCES += main/main.cpp src/client.cpp src/serveur.cpp \
-    src/message.cpp
+HEADERS += include/serveur.h \
+    include/message.h \
+    include/mainwindow.h
+SOURCES += main/main.cpp src/serveur.cpp \
+    src/message.cpp \
+    src/mainwindow.cpp
 
 QT += network
 QT += widgets
 QT += concurrent
+
+FORMS += \
+    mainwindow.ui

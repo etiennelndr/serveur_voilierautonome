@@ -15,6 +15,7 @@
 **/.qmake.stash
 **/slnx.sqlite
 **/moc_*
+**/ui_*
 
 # Prerequisites
 *.d

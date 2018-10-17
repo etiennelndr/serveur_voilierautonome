@@ -26,51 +26,51 @@ QString Message::encodeData() {
 
     // Type (B, M ou S)
     if (type) {
-        msg += "type" + to_string(SEPARATOR) + *type + "&";
+        msg += "type" + string(1, SEPARATOR) + *type + "&";
     }
     // Id de l'objet qui envoie -> 1, 2, ... pour bateaux, 0 pour serveur,  -1, -2, ... pour stations météos
     if (id_sender) {
-        msg += "id_sender" + to_string(SEPARATOR) + to_string(*id_sender) + "&";
+        msg += "id_sender" + string(1, SEPARATOR) + to_string(*id_sender) + "&";
     }
     // Id de l'objet qui doit recevoir
     if (id_dest) {
-        msg += "id_dest" + to_string(SEPARATOR) + to_string(*id_dest) + "&";
+        msg += "id_dest" + string(1, SEPARATOR) + to_string(*id_dest) + "&";
     }
     // Id de l'objet concerné
     if (id_concern) {
-        msg += "id_concern" + to_string(SEPARATOR) + to_string(*id_concern) + "&";
+        msg += "id_concern" + string(1, SEPARATOR) + to_string(*id_concern) + "&";
     }
     // Position GPS: longitude (du vent ou du bateau)
     if (longitude) {
-        msg += "longitude" + to_string(SEPARATOR) + to_string(*longitude) + "&";
+        msg += "longitude" + string(1, SEPARATOR) + to_string(*longitude) + "&";
     }
     // Position GPS: latitude (du vent ou du bateau)
     if (latitude) {
-        msg += "latitude" + to_string(SEPARATOR) + to_string(*latitude) + "&";
+        msg += "latitude" + string(1, SEPARATOR) + to_string(*latitude) + "&";
     }
     // Cap (du vent ou du bateau)
     if (cap) {
-        msg += "cap" + to_string(SEPARATOR) + to_string(*cap) + "&";
+        msg += "cap" + string(1, SEPARATOR) + to_string(*cap) + "&";
     }
     // Vitesse (du vent ou du bateau)
     if (vitesse) {
-        msg += "vitesse" + to_string(SEPARATOR) + to_string(*vitesse) + "&";
+        msg += "vitesse" + string(1, SEPARATOR) + to_string(*vitesse) + "&";
     }
     // Gite du bateau
     if (gite) {
-        msg += "gite" + to_string(SEPARATOR) + to_string(*gite) + "&";
+        msg += "gite" + string(1, SEPARATOR) + to_string(*gite) + "&";
     }
     // Tangage du bateau
     if (tangage) {
-        msg += "tangage" + to_string(SEPARATOR) + to_string(*tangage) + "&";
+        msg += "tangage" + string(1, SEPARATOR) + to_string(*tangage) + "&";
     }
     // Barre du bateau
     if (barre) {
-        msg += "barre" + to_string(SEPARATOR) + to_string(*barre) + "&";
+        msg += "barre" + string(1, SEPARATOR) + to_string(*barre) + "&";
     }
     // Ecoute du bateau
     if (ecoute) {
-        msg += "ecoute" + to_string(SEPARATOR) + to_string(*ecoute) + "&";
+        msg += "ecoute" + string(1, SEPARATOR) + to_string(*ecoute) + "&";
     }
 
     // Fermeture de la trame
