@@ -13,23 +13,9 @@ using namespace std;
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
 
-    Message* msg = new Message();
-
-    QString data("__&type:A&__");
-
-    msg->decodeData(data);
-
-    if (!msg->getError()) {
-        cout << *msg->getType() << endl;
-    }
-
-    delete msg;
-
-    return 0;
-
-    /*if (argc != 2) {
+    if (argc != 2) {
         cout << "Error: you must start the program this way -> ./serveur [client|serveur]" << endl;
-        exit(1);
+        return 1;
     }
 
     if (string(argv[1]) == "serveur") {
@@ -41,6 +27,6 @@ int main(int argc, char* argv[]) {
         return app.exec();
     } else {
         cout << "Error: you must start the program this way -> ./serveur [client|serveur]" << endl;
-        return 0;
-    }*/
+        return 1;
+    }
 }

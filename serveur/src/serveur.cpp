@@ -1,6 +1,6 @@
 #include "serveur.h"
 
-ServeurTcp::ServeurTcp(int port) {
+ServeurTcp::ServeurTcp(quint16 port) {
 	if (!(listen(QHostAddress::Any, port))) {
         cout << "Server: OFF" << endl;
     } else {
@@ -81,7 +81,7 @@ void ServeurTcp::envoyerATous(const QString &message) {
     out << (quint16) 0;    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
     out << message;        // On ajoute le message à la suite
     out.device()->seek(0); // On se replace au début du paquet
-    out << (quint16) (paquet.size() - sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
+    out << (quint16) (paquet.size() - (int)sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
 
 
     // Envoi du paquet préparé à tous les clients connectés au serveur
@@ -98,7 +98,7 @@ void ServeurTcp::envoyerATousSauf(const QString &message, const QTcpSocket* clie
     out << (quint16) 0;    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
     out << message;        // On ajoute le message à la suite
     out.device()->seek(0); // On se replace au début du paquet
-    out << (quint16) (paquet.size() - sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
+    out << (quint16) (paquet.size() - (int)sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
 
 
     // Envoi du paquet préparé à tous les clients connectés au serveur

@@ -8,12 +8,14 @@
 #include <iostream>
 #include <unistd.h>
 
+#include "message.h"
+
 using namespace std;
 
 class ClientTcp : public QObject {
     Q_OBJECT
     public: 
-	    ClientTcp(QString ip, int port, QString _pseudo);
+        ClientTcp(QString ip, quint16 port, QString _pseudo);
         ~ClientTcp();
         void run();
     private slots:
@@ -25,7 +27,7 @@ class ClientTcp : public QObject {
         // Ip du serveur
 	    QString serverIp;
         // Port utilisé par le serveur
-	    int serverPort;
+        quint16 serverPort;
         // Socket
 	    QTcpSocket* soc;
         // Taille du message

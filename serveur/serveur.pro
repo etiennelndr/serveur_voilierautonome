@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = 
+TARGET = serveur
 DEPENDPATH += . include main src
 INCLUDEPATH += . include
 
@@ -14,3 +14,5 @@ SOURCES += main/main.cpp src/client.cpp src/serveur.cpp \
     src/message.cpp
 
 QT += network
+QT += widgets
+QT += concurrent

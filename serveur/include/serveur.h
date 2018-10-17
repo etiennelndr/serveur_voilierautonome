@@ -8,12 +8,14 @@
 #include <QString>
 #include <iostream>
 
+#include "message.h"
+
 using namespace std;
 
 class ServeurTcp : public QTcpServer {
     Q_OBJECT
     public:
-	    ServeurTcp(int port);
+        ServeurTcp(quint16 port);
 		~ServeurTcp();
 		void envoyerATous(const QString &message);
         void envoyerATousSauf(const QString &message, const QTcpSocket* client);

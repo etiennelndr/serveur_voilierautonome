@@ -25,51 +25,51 @@ QString Message::encodeData() {
     string msg = "__&";
 
     // Type (B, M ou S)
-    if (!type) {
+    if (type) {
         msg += "type" + to_string(SEPARATOR) + *type + "&";
     }
     // Id de l'objet qui envoie -> 1, 2, ... pour bateaux, 0 pour serveur,  -1, -2, ... pour stations météos
-    if (!id_sender) {
+    if (id_sender) {
         msg += "id_sender" + to_string(SEPARATOR) + to_string(*id_sender) + "&";
     }
     // Id de l'objet qui doit recevoir
-    if (!id_dest) {
+    if (id_dest) {
         msg += "id_dest" + to_string(SEPARATOR) + to_string(*id_dest) + "&";
     }
     // Id de l'objet concerné
-    if (!id_concern) {
+    if (id_concern) {
         msg += "id_concern" + to_string(SEPARATOR) + to_string(*id_concern) + "&";
     }
     // Position GPS: longitude (du vent ou du bateau)
-    if (!longitude) {
+    if (longitude) {
         msg += "longitude" + to_string(SEPARATOR) + to_string(*longitude) + "&";
     }
     // Position GPS: latitude (du vent ou du bateau)
-    if (!latitude) {
+    if (latitude) {
         msg += "latitude" + to_string(SEPARATOR) + to_string(*latitude) + "&";
     }
     // Cap (du vent ou du bateau)
-    if (!cap) {
+    if (cap) {
         msg += "cap" + to_string(SEPARATOR) + to_string(*cap) + "&";
     }
     // Vitesse (du vent ou du bateau)
-    if (!vitesse) {
+    if (vitesse) {
         msg += "vitesse" + to_string(SEPARATOR) + to_string(*vitesse) + "&";
     }
     // Gite du bateau
-    if (!gite) {
+    if (gite) {
         msg += "gite" + to_string(SEPARATOR) + to_string(*gite) + "&";
     }
     // Tangage du bateau
-    if (!tangage) {
+    if (tangage) {
         msg += "tangage" + to_string(SEPARATOR) + to_string(*tangage) + "&";
     }
     // Barre du bateau
-    if (!barre) {
+    if (barre) {
         msg += "barre" + to_string(SEPARATOR) + to_string(*barre) + "&";
     }
     // Ecoute du bateau
-    if (!ecoute) {
+    if (ecoute) {
         msg += "ecoute" + to_string(SEPARATOR) + to_string(*ecoute) + "&";
     }
 

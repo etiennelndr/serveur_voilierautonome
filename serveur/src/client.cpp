@@ -1,6 +1,6 @@
 #include "client.h"
 
-ClientTcp::ClientTcp(QString ip, int port, QString _pseudo) {
+ClientTcp::ClientTcp(QString ip, quint16 port, QString _pseudo) {
 	serverPort = port; // choix arbitraire (>1024)
     serverIp   = ip;
     pseudo     = _pseudo;
@@ -24,10 +24,11 @@ ClientTcp::~ClientTcp() {
 
 void ClientTcp::run() {
     while (true) {
-        string msg;
+        Message* msg = new Message();
 		cout << "Write here: ";
-        cin >> msg;
-        send(QString::fromStdString(msg));
+        msg->setType(new string("B"));
+        send(msg->encodeData());
+        QThread::sleep(3);
     }
 }
 
@@ -35,13 +36,10 @@ void ClientTcp::send(QString msg) {
 	QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
 
-    // On prépare le paquet à envoyer
-    QString messageAEnvoyer = pseudo + " : " + msg;
-
     out << (quint16) 0;
-    out << messageAEnvoyer;
+    out << msg;
     out.device()->seek(0);
-    out << (quint16) (paquet.size() - sizeof(quint16));
+    out << (quint16) (paquet.size() - (int)sizeof(quint16));
 
     soc->write(paquet); // On envoie le paquet
 }
