@@ -52,6 +52,7 @@ void ServeurTcp::donneesRecues() {
     QString message;
     in >> message;
 
+    emit received_data(message);
     cout << message.toStdString() << endl;
 
     // On renvoie le message à tous les clients
