@@ -20,7 +20,7 @@ class MainWindow : public QMainWindow {
 public:
     explicit MainWindow(QWidget* parent=nullptr);
     ~MainWindow();
-    QString get_msg(){return _msg->text();}
+    QString get_msg(){ return _msg->text(); }
     void write_in_konsole(QString log) {_konsole->appendPlainText(log);}
 
 private:
@@ -29,7 +29,7 @@ private:
     QPushButton *send_button;
     QLineEdit *_msg;
 
-    ServeurTcp* serveur;
+    ServeurTcp* serveur=nullptr;
 
 public slots:
     void state();

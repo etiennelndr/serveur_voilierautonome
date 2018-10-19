@@ -20,6 +20,9 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWin
 MainWindow::~MainWindow() {
     delete ui;
     delete serveur;
+    delete _konsole;
+    delete _msg;
+    delete send_button;
 }
 
 void MainWindow::state() {
@@ -30,11 +33,13 @@ void MainWindow::state() {
     } else if (ui->lancement_serveur->text() == QString("Arrêt Serveur")) {
         ui->lancement_serveur->setText("Lancement Serveur");
         delete serveur;
+        serveur = nullptr;
     }
 }
 
 void MainWindow::send() {
-    serveur->envoyerATous(get_msg());
+    if (serveur)
+        serveur->envoyerATous(get_msg());
 }
 
 void MainWindow::msg_processing(QString msg){
