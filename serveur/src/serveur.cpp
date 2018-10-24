@@ -55,7 +55,8 @@ void ServeurTcp::donneesRecues() {
     emit received_data(message);
     cout << message.toStdString() << endl;
 
-    // On renvoie le message à tous les clients
+    // On renvoie le message à tous les clients sauf celui qui a envoyé les données
+    // ATTENTION: Dans le futur cela ne sera SURTOUT PAS à faire
     envoyerATousSauf(message, socket);
 
     // Remise de la taille du message à 0 pour permettre la réception des futurs messages
@@ -92,7 +93,7 @@ void ServeurTcp::envoyerATous(const QString &message) {
     }
 }
 
-void ServeurTcp::envoyerATousSauf(const QString &message, const QTcpSocket* client) {
+void ServeurTcp::envoyerATousSauf(const QString &message, QTcpSocket* client) {
     // Préparation du paquet
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
@@ -105,7 +106,7 @@ void ServeurTcp::envoyerATousSauf(const QString &message, const QTcpSocket* clie
 
     // Envoi du paquet préparé à tous les clients connectés au serveur
     for (int i = 0; i < clients.size(); i++) {
-        if (clients[i] != client) {
+        if (clients[i]->socketDescriptor() != client->socketDescriptor()) {
             clients[i]->write(paquet);
         }
     }
