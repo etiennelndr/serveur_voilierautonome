@@ -1,9 +1,4 @@
 #include <QApplication>
-#include <QtConcurrentRun>
-#include <iostream>
-#include <string>
-
-#include "message.h"
 #include "mainwindow.h"
 
 using namespace std;

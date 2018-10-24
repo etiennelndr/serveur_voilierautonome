@@ -19,7 +19,7 @@ class ServeurTcp : public QTcpServer {
 		~ServeurTcp();
 		void envoyerATous(const QString &message);
         void envoyerATousSauf(const QString &message, const QTcpSocket* client);
-//        QString get_message() {return current_message;}
+
 
 
     public slots:
