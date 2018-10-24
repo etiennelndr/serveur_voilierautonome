@@ -1,6 +1,8 @@
 #include "serialdata.h"
 
 /**
+ * CONSTRUCTOR
+ *
  * @brief SerialData::SerialData
  * @param port
  * @param parent
@@ -22,12 +24,20 @@ SerialData::SerialData(QString port, QObject *parent) : QObject(parent) {
     }
 }
 
+/**
+ * DESTRUCTOR
+ *
+ * @brief SerialData::~SerialData
+ */
 SerialData::~SerialData() {
     delete mPort;
+    delete msg;
 }
 
 /**
- * @brief SerialData::sendData
+ * METHOD
+ *
+ * @brief SerialData::sendData : send data to the UART
  * @param msg
  */
 void SerialData::sendData(Message msg) {
@@ -38,7 +48,9 @@ void SerialData::sendData(Message msg) {
 }
 
 /**
- * @brief SerialData::readData
+ * SLOT -> this slot is called when readyRead() signal is emitted
+ *
+ * @brief SerialData::readData : read data from UART
  */
 void SerialData::readData() {
     QString data = mPort->readAll();

@@ -1,9 +1,19 @@
 #include "message.h"
 
+/**
+ * CONSTRUCTOR
+ *
+ * @brief Message::Message : Constructor for Message class
+ */
 Message::Message() {
     error = false;
 }
 
+/**
+ * DESTRUCTOR
+ *
+ * @brief Message::~Message : Destructor for Message class
+ */
 Message::~Message() {
     delete type;
     delete id_sender;
@@ -20,6 +30,8 @@ Message::~Message() {
 }
 
 /**
+ * METHOD
+ *
  * @brief Message::encodeData : Encodeur pour l'UART et le TCP/IP
  * @return
  */
@@ -83,6 +95,8 @@ QString Message::encodeData() {
 }
 
 /**
+ * METHOD
+ *
  * @brief Message::decodeData : Décodeur pour l'UART et le TCP/IP
  * @param msg
  */
@@ -107,6 +121,8 @@ void Message::decodeData(QString msg) {
 }
 
 /**
+ * METHOD
+ *
  * @brief Message::assignValueToCorrectAttribute : used for attribute value assignment
  * @param s
  */
@@ -142,6 +158,8 @@ void Message::assignValueToCorrectAttribute(string& data) {
 }
 
 /**
+ * METHOD
+ *
  * @brief Message::splitMessage : this method is useful to split encoding message
  * @param s
  * @param delimiter

@@ -17,26 +17,37 @@ namespace Ui {
     class MainWindow;
 }
 
+/**
+ * @brief The MainWindow class
+ */
 class MainWindow : public QMainWindow {
     Q_OBJECT
-public:
-    explicit MainWindow(QWidget* parent=nullptr);
-    ~MainWindow();
-    void write_in_konsole(QString log);
-    QString get_msg(){ return _msg->text(); }
+    public:
+        explicit MainWindow(QWidget* parent=nullptr);
+        ~MainWindow();
+        void write_in_konsole(QString log);
+        QString get_msg();
 
-private:
-    Ui::MainWindow* ui;
-//    QPlainTextEdit *_konsole;
-    QPushButton *send_button;
-    QLineEdit *_msg;
+    private:
+        Ui::MainWindow* ui;
+    //    QPlainTextEdit *_konsole;
+        QPushButton *send_button;
+        QLineEdit *_msg;
 
-    ServeurTcp* serveur=nullptr;
+        ServeurTcp* serveur=nullptr;
 
-public slots:
-    void state();
-    void send();
-    void msg_processing(QString msg);
+    public slots:
+        void state();
+        void send();
+        void msg_processing(QString msg);
 };
+
+/**
+ * METHOD
+ *
+ * @brief MainWindow::get_msg : TODO
+ * @return
+ */
+inline QString MainWindow::get_msg(){ return _msg->text(); }
 
 #endif // MAINWINDOW_H

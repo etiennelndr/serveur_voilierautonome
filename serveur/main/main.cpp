@@ -3,6 +3,12 @@
 
 using namespace std;
 
+/**
+ * @brief qMain
+ * @param argc
+ * @param argv
+ * @return
+ */
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     MainWindow mw;

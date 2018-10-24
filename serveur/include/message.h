@@ -10,6 +10,9 @@
 
 using namespace std;
 
+/**
+ * @brief The Message class
+ */
 class Message {
     public:
         Message();

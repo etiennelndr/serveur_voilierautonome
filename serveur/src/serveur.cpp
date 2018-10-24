@@ -1,5 +1,11 @@
 #include "serveur.h"
 
+/**
+ * CONSTRUCTOR
+ *
+ * @brief ServeurTcp::ServeurTcp : TODO
+ * @param port
+ */
 ServeurTcp::ServeurTcp(quint16 port) {
     // Open the connection
 	if (!(listen(QHostAddress::Any, port))) {
@@ -8,18 +14,32 @@ ServeurTcp::ServeurTcp(quint16 port) {
         cout << "Server: ON" << endl;
         connect(this, SIGNAL(newConnection()), this, SLOT(demandeConnexion()));
     }
+
     // Create the UART
     uart = new SerialData(QString("2929"), nullptr);
-    connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(getDataFromUART(Message)));
+    // Connect it -> when receivedDataFromUART signal is emitted, call readDataFromUART slot
+    connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
+
     // Set length of message to 0
     tailleMessage = 0;
 }
 
+/**
+ * DESTRUCTOR
+ *
+ * @brief ServeurTcp::~ServeurTcp : TODO
+ */
 ServeurTcp::~ServeurTcp() {
     qDeleteAll(clients);
+    delete uart;
     cout << "Server: OFF" << endl;
 }
 
+/**
+ * SLOT -> this slot is called when newConnection() signal is emitted
+ *
+ * @brief ServeurTcp::demandeConnexion : TODO
+ */
 void ServeurTcp::demandeConnexion() {
     envoyerATous(tr("Un client vient de se connecter"));
 
@@ -27,11 +47,16 @@ void ServeurTcp::demandeConnexion() {
 	QTcpSocket *nouveauClient = nextPendingConnection();
     clients << nouveauClient;
 
-    connect(nouveauClient, SIGNAL(readyRead()), this, SLOT(donneesRecues()));
+    connect(nouveauClient, SIGNAL(readyRead()), this, SLOT(getDataFromTCPIP()));
     connect(nouveauClient, SIGNAL(disconnected()), this, SLOT(deconnexionClient()));
 }
 
-void ServeurTcp::donneesRecues() {
+/**
+ * SLOT -> this slot is called when readyRead() signal is emitted
+ *
+ * @brief ServeurTcp::donneesRecues : TODO
+ */
+void ServeurTcp::getDataFromTCPIP() {
     // On reçoit un paquet (ou un sous-paquet) d'un des clients
     // On détermine quel client envoie le message (recherche du QTcpSocket du client)
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
@@ -67,6 +92,11 @@ void ServeurTcp::donneesRecues() {
     tailleMessage = 0;
 }
 
+/**
+ * SLOT -> this slot is called when disconnected() signal is emitted
+ *
+ * @brief ServeurTcp::deconnexionClient : TODO
+ */
 void ServeurTcp::deconnexionClient() {
     // On détermine quel client se déconnecte
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
@@ -80,6 +110,12 @@ void ServeurTcp::deconnexionClient() {
     socket->deleteLater();
 }
 
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::envoyerATous : TODO
+ * @param message
+ */
 void ServeurTcp::envoyerATous(const QString &message) {
     // Préparation du paquet
     QByteArray paquet;
@@ -97,6 +133,13 @@ void ServeurTcp::envoyerATous(const QString &message) {
     }
 }
 
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::envoyerATousSauf : TODO
+ * @param message
+ * @param client
+ */
 void ServeurTcp::envoyerATousSauf(const QString &message, QTcpSocket* client) {
     // Préparation du paquet
     QByteArray paquet;
@@ -107,7 +150,6 @@ void ServeurTcp::envoyerATousSauf(const QString &message, QTcpSocket* client) {
     out.device()->seek(0); // On se replace au début du paquet
     out << (quint16) (paquet.size() - (int)sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
 
-
     // Envoi du paquet préparé à tous les clients connectés au serveur
     for (int i = 0; i < clients.size(); i++) {
         if (clients[i]->socketDescriptor() != client->socketDescriptor()) {
@@ -116,7 +158,25 @@ void ServeurTcp::envoyerATousSauf(const QString &message, QTcpSocket* client) {
     }
 }
 
-void ServeurTcp::getDataFromUART(Message msg) {
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::sendDataToUART : send data to the UART
+ * @param msg
+ */
+void ServeurTcp::sendDataToUART(Message msg) {
+    uart->sendData(msg);
+}
+
+/**
+ * SLOT -> this slot is called when receivedDataFromUART() signal is emitted
+ *
+ * @brief ServeurTcp::getDataFromUART : TODO
+ * @param msg
+ */
+void ServeurTcp::readDataFromUART(Message msg) {
     if (msg.getError())
-        qDebug() << "Error when decoding the data from the UART";
+        emit received_data(QString("Error when decoding the message from the UART."));
+    else
+        emit received_data(msg.encodeData());
 }

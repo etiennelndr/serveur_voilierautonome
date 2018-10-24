@@ -13,6 +13,9 @@
 
 using namespace std;
 
+/**
+ * @brief The ServeurTcp class
+ */
 class ServeurTcp : public QTcpServer {
     Q_OBJECT
     public:
@@ -26,9 +29,9 @@ class ServeurTcp : public QTcpServer {
 
     public slots:
 		void demandeConnexion();
-		void donneesRecues();
+        void getDataFromTCPIP();
         void deconnexionClient();
-        void getDataFromUART(Message);
+        void readDataFromUART(Message);
 
     signals:
         void received_data(QString);
@@ -38,6 +41,8 @@ class ServeurTcp : public QTcpServer {
 		quint16 tailleMessage;
         SerialData *uart;
 //        QString current_message;
+
+        void sendDataToUART(Message msg);
 };
 
 

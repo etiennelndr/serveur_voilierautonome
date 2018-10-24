@@ -7,11 +7,16 @@
 #include <QDebug>
 #include "message.h"
 
+/**
+ * @brief The SerialData class
+ */
 class SerialData : public QObject {
     Q_OBJECT
     public:
         SerialData(QString port, QObject *parent=nullptr);
         ~SerialData();
+
+        void sendData(Message msg);
 
     private:
         // Avoid simple creation of SerialData
@@ -25,7 +30,6 @@ class SerialData : public QObject {
 
     private slots:
         void readData();
-        void sendData(Message msg);
 
     signals:
         void receivedDataFromUART(Message);
