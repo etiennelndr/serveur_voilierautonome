@@ -6,25 +6,44 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
+    <width>400</width>
     <height>600</height>
    </rect>
   </property>
+  <property name="minimumSize">
+   <size>
+    <width>400</width>
+    <height>600</height>
+   </size>
+  </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>Serveur</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="lancement_serveur">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>200</y>
-      <width>181</width>
+      <x>100</x>
+      <y>10</y>
+      <width>201</width>
       <height>28</height>
      </rect>
     </property>
     <property name="text">
      <string>Lancement Serveur</string>
+    </property>
+   </widget>
+   <widget class="QPlainTextEdit" name="konsole">
+    <property name="geometry">
+     <rect>
+      <x>13</x>
+      <y>249</y>
+      <width>371</width>
+      <height>321</height>
+     </rect>
+    </property>
+    <property name="readOnly">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>
@@ -33,10 +52,22 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>26</height>
+     <width>400</width>
+     <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="tearOffEnabled">
+     <bool>false</bool>
+    </property>
+    <property name="title">
+     <string/>
+    </property>
+   </widget>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
  </widget>

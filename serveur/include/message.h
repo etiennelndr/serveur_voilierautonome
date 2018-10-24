@@ -1,6 +1,7 @@
 #ifndef MESSAGE_H
 #define MESSAGE_H 1
 
+
 #include <QString>
 #include <string>
 #include <iostream>
