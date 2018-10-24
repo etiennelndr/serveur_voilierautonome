@@ -47,7 +47,7 @@ void ServeurTcp::demandeConnexion() {
 	QTcpSocket *nouveauClient = nextPendingConnection();
     clients << nouveauClient;
 
-    connect(nouveauClient, SIGNAL(readyRead()), this, SLOT(getDataFromTCPIP()));
+    connect(nouveauClient, SIGNAL(readyRead()), this, SLOT(readDataFromTCPIP()));
     connect(nouveauClient, SIGNAL(disconnected()), this, SLOT(deconnexionClient()));
 }
 
@@ -56,7 +56,7 @@ void ServeurTcp::demandeConnexion() {
  *
  * @brief ServeurTcp::donneesRecues : TODO
  */
-void ServeurTcp::getDataFromTCPIP() {
+void ServeurTcp::readDataFromTCPIP() {
     // On reçoit un paquet (ou un sous-paquet) d'un des clients
     // On détermine quel client envoie le message (recherche du QTcpSocket du client)
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());

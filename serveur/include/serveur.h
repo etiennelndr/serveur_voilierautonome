@@ -29,7 +29,7 @@ class ServeurTcp : public QTcpServer {
 
     public slots:
 		void demandeConnexion();
-        void getDataFromTCPIP();
+        void readDataFromTCPIP();
         void deconnexionClient();
         void readDataFromUART(Message);
 
