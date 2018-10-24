@@ -28,6 +28,7 @@ class ServeurTcp : public QTcpServer {
 		void demandeConnexion();
 		void donneesRecues();
         void deconnexionClient();
+        void getDataFromUART(Message);
 
     signals:
         void received_data(QString);

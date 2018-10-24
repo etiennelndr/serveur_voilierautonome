@@ -10,6 +10,7 @@ ServeurTcp::ServeurTcp(quint16 port) {
     }
     // Create the UART
     uart = new SerialData(QString("2929"), nullptr);
+    connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(getDataFromUART(Message)));
     // Set length of message to 0
     tailleMessage = 0;
 }
@@ -34,7 +35,7 @@ void ServeurTcp::donneesRecues() {
     // On reçoit un paquet (ou un sous-paquet) d'un des clients
     // On détermine quel client envoie le message (recherche du QTcpSocket du client)
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
-    if (socket == 0) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
+    if (socket == nullptr) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
         return;
 
     // Si tout va bien, on continue : on récupère le message
@@ -69,7 +70,7 @@ void ServeurTcp::donneesRecues() {
 void ServeurTcp::deconnexionClient() {
     // On détermine quel client se déconnecte
     QTcpSocket *socket = qobject_cast<QTcpSocket *>(sender());
-    if (socket == 0) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
+    if (socket == nullptr) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
         return;
 
     envoyerATousSauf(tr("Un client vient de se déconnecter"), socket);
@@ -113,4 +114,9 @@ void ServeurTcp::envoyerATousSauf(const QString &message, QTcpSocket* client) {
             clients[i]->write(paquet);
         }
     }
+}
+
+void ServeurTcp::getDataFromUART(Message msg) {
+    if (msg.getError())
+        qDebug() << "Error when decoding the data from the UART";
 }

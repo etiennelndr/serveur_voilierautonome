@@ -36,7 +36,6 @@ void MainWindow::state() {
 }
 
 void MainWindow::send() {
-    serveur->envoyerATous(_msg->text());
     _msg->clear();
     if (serveur)
         serveur->envoyerATous(get_msg());
