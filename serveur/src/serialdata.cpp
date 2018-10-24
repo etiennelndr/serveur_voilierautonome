@@ -32,7 +32,6 @@ SerialData::SerialData(QString port, QObject *parent) : QObject(parent) {
 SerialData::~SerialData() {
     mPort->close();
     delete mPort;
-    delete msg;
 }
 
 /**

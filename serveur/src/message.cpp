@@ -89,7 +89,7 @@ QString Message::encodeData() {
     }
 
     // Fermeture de la trame
-    msg += "__\r\n";
+    msg += "__";
 
     return QString::fromStdString(msg);
 }
@@ -105,11 +105,11 @@ void Message::decodeData(QString msg) {
     string data = msg.toStdString();
 
     // Split the data (for each '&' character we split the data)
-    vector<string> splitData = splitMessage(data, (char)(*"&"));
+    vector<string> splitData = splitMessage(data, char(*"&"));
 
     // If we don't have correct symbols at the beginning and the end
     // of the data we MUST return an error
-    if (splitData[0] != "__" || splitData[splitData.size()-1] != "__\r\n") {
+    if (splitData[0] != "__" || splitData[splitData.size()-1] != "__") {
         error = true;
         return;
     }

@@ -22,11 +22,12 @@ class ServeurTcp : public QTcpServer {
     public:
         ServeurTcp(quint16 port);
 		~ServeurTcp();
-        void sendToAll(const QString &message);
-        void sendToAllExcept(const QString &message, QTcpSocket* client);
-        void sendTo(const QString &message, QTcpSocket* client);
+        void sendToAllExceptWeatherStation(Message message);
+        void sendToAllExcept(Message message, QTcpSocket* client);
+        void sendToAll(Message message);
+        void sendTo(Message message, QTcpSocket* client);
         boolean checkConnectionUART(Message msg);
-        void checkConnectionTCPIP(Message data, QTcpSocket* socket);
+        boolean checkConnectionTCPIP(Message data, QTcpSocket* socket);
 //        QString get_message() {return current_message;}
 
 
@@ -46,7 +47,8 @@ class ServeurTcp : public QTcpServer {
 //        QString current_message;
 
         void sendDataToUART(Message msg);
-        void sendIdToUART(int id, string* type);
+        void sendIdToUART(int id);
+        void treatTCPIPMessage(Message msg);
 
         QStringList weatherStationsId;
         QStringList boatsId;

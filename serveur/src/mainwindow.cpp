@@ -64,7 +64,9 @@ void MainWindow::state() {
  */
 void MainWindow::send() {
     if (serveur) {
-        serveur->sendToAll(get_msg());
+        Message msg;
+        msg.decodeData(get_msg());
+        serveur->sendToAll(msg);
         _msg->clear();
     }
 }

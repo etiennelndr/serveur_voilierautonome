@@ -26,8 +26,6 @@ class SerialData : public QObject {
 
         QString port;
 
-        Message* msg;
-
     private slots:
         void readData();
 
