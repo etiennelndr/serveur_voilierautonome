@@ -16,7 +16,7 @@ ServeurTcp::ServeurTcp(quint16 port) {
     }
 
     // Create the UART
-    uart = new SerialData(QString("2929"), nullptr);
+    uart = new SerialData(QString("COM1"), nullptr);
     // Connect it -> when receivedDataFromUART signal is emitted, call readDataFromUART slot
     connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
 
@@ -41,7 +41,7 @@ ServeurTcp::~ServeurTcp() {
  * @brief ServeurTcp::demandeConnexion : TODO
  */
 void ServeurTcp::demandeConnexion() {
-    envoyerATous(tr("Un client vient de se connecter"));
+    sendToAll(tr("Un client vient de se connecter"));
 
     // On crée une nouvelle socket pour ce client
 	QTcpSocket *nouveauClient = nextPendingConnection();
@@ -81,12 +81,16 @@ void ServeurTcp::readDataFromTCPIP() {
     QString message;
     in >> message;
 
+    Message data;
+    data.decodeData(message);
+    // Check if it's the first connection
+    checkConnectionTCPIP(data, socket);
+
     emit received_data(message);
-    cout << message.toStdString() << endl;
 
     // On renvoie le message à tous les clients sauf celui qui a envoyé les données
     // ATTENTION: Dans le futur cela ne sera SURTOUT PAS à faire
-    envoyerATousSauf(message, socket);
+    //sendToAllExcept(message, socket);
 
     // Remise de la taille du message à 0 pour permettre la réception des futurs messages
     tailleMessage = 0;
@@ -103,7 +107,7 @@ void ServeurTcp::deconnexionClient() {
     if (socket == nullptr) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
         return;
 
-    envoyerATousSauf(tr("Un client vient de se déconnecter"), socket);
+    sendToAllExcept(tr("Un client vient de se déconnecter"), socket);
 
     clients.removeOne(socket);
 
@@ -113,22 +117,28 @@ void ServeurTcp::deconnexionClient() {
 /**
  * METHOD
  *
- * @brief ServeurTcp::envoyerATous : TODO
+ * @brief ServeurTcp::sendToAll : send to TCP/IP clients and UART clients
  * @param message
  */
-void ServeurTcp::envoyerATous(const QString &message) {
+void ServeurTcp::sendToAll(const QString &message) {
     // Préparation du paquet
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
 
-    out << (quint16) 0;    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
-    out << message;        // On ajoute le message à la suite
-    out.device()->seek(0); // On se replace au début du paquet
-    out << (quint16) (paquet.size() - (int)sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
-
-
+    Message infos;
+    infos.decodeData(message);
     // Envoi du paquet préparé à tous les clients connectés au serveur
     for (int i = 0; i < clients.size(); i++) {
+        Message msg;
+        msg.setType(new string("S"));
+        msg.setIdSender(new int(0));
+        msg.setIdConcern(infos.getIdSender());
+        msg.setIdDest(new int(linkBetweenClientsAndPC[i]));
+
+        out << (quint16) 0;    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
+        out << message;        // On ajoute le message à la suite
+        out.device()->seek(0); // On se replace au début du paquet
+        out << (quint16) (paquet.size() - (int)sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
         clients[i]->write(paquet);
     }
 }
@@ -136,11 +146,11 @@ void ServeurTcp::envoyerATous(const QString &message) {
 /**
  * METHOD
  *
- * @brief ServeurTcp::envoyerATousSauf : TODO
+ * @brief ServeurTcp::sendToAllExcept : TODO
  * @param message
  * @param client
  */
-void ServeurTcp::envoyerATousSauf(const QString &message, QTcpSocket* client) {
+void ServeurTcp::sendToAllExcept(const QString &message, QTcpSocket* client) {
     // Préparation du paquet
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
@@ -156,6 +166,27 @@ void ServeurTcp::envoyerATousSauf(const QString &message, QTcpSocket* client) {
             clients[i]->write(paquet);
         }
     }
+}
+
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::sendTo : send a message to one and only one client
+ * @param message
+ * @param client
+ */
+void ServeurTcp::sendTo(const QString &message, QTcpSocket* client) {
+    // Préparation du paquet
+    QByteArray paquet;
+    QDataStream out(&paquet, QIODevice::WriteOnly);
+
+    out << (quint16) 0;    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
+    out << message;        // On ajoute le message à la suite
+    out.device()->seek(0); // On se replace au début du paquet
+    out << (quint16) (paquet.size() - (int)sizeof(quint16)); // On écrase le 0 qu'on avait réservé par la longueur du message
+
+    // Envoi du paquet préparé au client demandé
+    client->write(paquet);
 }
 
 /**
@@ -177,6 +208,82 @@ void ServeurTcp::sendDataToUART(Message msg) {
 void ServeurTcp::readDataFromUART(Message msg) {
     if (msg.getError())
         emit received_data(QString("Error when decoding the message from the UART."));
-    else
+    else {
         emit received_data(msg.encodeData());
+
+        if (!checkConnectionUART(msg)) {
+            // Transmit datas to computer
+            if (*msg.getIdSender() > 0) {
+                // This message comes from a boat
+
+            } else if (*msg.getIdSender() < 0) {
+                // This message comes from a weather station
+                //sendToAll(msg.encodeData());
+            }
+        }
+    }
+}
+
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::checkConnectionUART : TODO
+ * @param message
+ * @return
+ */
+boolean ServeurTcp::checkConnectionUART(Message msg) {
+    if (msg.getType()->length() != 2)
+        return false;
+
+    if (*msg.getType() == "MC") {
+        // Connection d'une station météo
+        int id = weatherStationsId.length()+1;
+        weatherStationsId.append(QString(id));
+        // Now send it to the weather station
+        sendIdToUART(id, new string("M"));
+    } else if (*msg.getType() == "BC") {
+        // Connection d'un bateau
+        int id = boatsId.length()+1;
+        boatsId.append(QString(id));
+        // Now send it to the boat
+        sendIdToUART(id, new string("B"));
+    }
+
+    return true;
+}
+
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::checkConnectionTCPIP : TODO
+ * @param data
+ * @param socket
+ */
+void ServeurTcp::checkConnectionTCPIP(Message data, QTcpSocket* socket) {
+    if (data.getType()->length() == 2) {
+        for (int i = 0; i < clients.size(); i++) {
+            if (clients[i]->socketDescriptor() == socket->socketDescriptor()) {
+                linkBetweenClientsAndPC.insert(make_pair(i, *data.getIdSender()));
+                linkBetweenPCAndClients.insert(make_pair(*data.getIdSender(), i));
+            }
+        }
+    }
+}
+
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::sendIdToUART : TODO
+ * @param id
+ * @param type
+ */
+void ServeurTcp::sendIdToUART(int id, string* type) {
+    // Create the message
+    Message msg;
+    msg.setType(type);
+    msg.setIdConcern(new int(id));
+    msg.setIdSender(new int(0));
+    msg.setIdDest(new int(id));
+    // Now send it
+    uart->sendData(msg);
 }

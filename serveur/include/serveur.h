@@ -8,6 +8,7 @@
 #include <QString>
 #include <iostream>
 #include "serialdata.h"
+#include <map>
 
 #include "message.h"
 
@@ -21,9 +22,11 @@ class ServeurTcp : public QTcpServer {
     public:
         ServeurTcp(quint16 port);
 		~ServeurTcp();
-        void envoyerATous(const QString &message);
-        void envoyerATousSauf(const QString &message, const QTcpSocket* client);
-        void envoyerATousSauf(const QString &message, QTcpSocket* client);
+        void sendToAll(const QString &message);
+        void sendToAllExcept(const QString &message, QTcpSocket* client);
+        void sendTo(const QString &message, QTcpSocket* client);
+        boolean checkConnectionUART(Message msg);
+        void checkConnectionTCPIP(Message data, QTcpSocket* socket);
 //        QString get_message() {return current_message;}
 
 
@@ -43,6 +46,12 @@ class ServeurTcp : public QTcpServer {
 //        QString current_message;
 
         void sendDataToUART(Message msg);
+        void sendIdToUART(int id, string* type);
+
+        QStringList weatherStationsId;
+        QStringList boatsId;
+        map<int, int> linkBetweenClientsAndPC;
+        map<int, int> linkBetweenPCAndClients;
 };
 
 

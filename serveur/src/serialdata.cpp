@@ -30,6 +30,7 @@ SerialData::SerialData(QString port, QObject *parent) : QObject(parent) {
  * @brief SerialData::~SerialData
  */
 SerialData::~SerialData() {
+    mPort->close();
     delete mPort;
     delete msg;
 }
@@ -53,11 +54,11 @@ void SerialData::sendData(Message msg) {
  * @brief SerialData::readData : read data from UART
  */
 void SerialData::readData() {
-    QString data = mPort->readAll();
-    qDebug() << "Serial data IN : " << data;
+    QString datas = QString(mPort->readAll().data());
+    qDebug() << "Serial data IN : " << datas;
     // Decode data
     Message msg;
-    msg.decodeData(data);
+    msg.decodeData(datas);
     // Emit a signal to inform the server we received
     // datas from the UART
     emit receivedDataFromUART(msg);

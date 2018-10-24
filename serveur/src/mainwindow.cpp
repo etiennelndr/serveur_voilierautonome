@@ -60,18 +60,19 @@ void MainWindow::state() {
 /**
  * SLOT ->
  *
- * @brief MainWindow::send
+ * @brief MainWindow::send : TODO
  */
 void MainWindow::send() {
-    _msg->clear();
-    if (serveur)
-        serveur->envoyerATous(get_msg());
+    if (serveur) {
+        serveur->sendToAll(get_msg());
+        _msg->clear();
+    }
 }
 
 /**
  * SLOT -> this slot is called when received_data() signal is emitted
  *
- * @brief MainWindow::msg_processing
+ * @brief MainWindow::msg_processing : TODO
  * @param msg
  */
 void MainWindow::msg_processing(QString msg){
