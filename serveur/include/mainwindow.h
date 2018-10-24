@@ -23,6 +23,9 @@ public:
     explicit MainWindow(QWidget* parent=nullptr);
     ~MainWindow();
     void write_in_konsole(QString log);
+=======
+    QString get_msg(){ return _msg->text(); }
+    void write_in_konsole(QString log) {_konsole->appendPlainText(log);}
 
 private:
     Ui::MainWindow* ui;
@@ -30,7 +33,6 @@ private:
     QPushButton *send_button;
     QLineEdit *_msg;
 
-    ServeurTcp* serveur;
 
 public slots:
     void state();

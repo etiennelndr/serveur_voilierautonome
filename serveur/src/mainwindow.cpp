@@ -15,6 +15,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWin
 MainWindow::~MainWindow() {
     delete ui;
     delete serveur;
+    delete _konsole;
 }
 
 void MainWindow::write_in_konsole(QString log) {
