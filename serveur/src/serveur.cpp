@@ -1,13 +1,16 @@
 #include "serveur.h"
 
 ServeurTcp::ServeurTcp(quint16 port) {
+    // Open the connection
 	if (!(listen(QHostAddress::Any, port))) {
         cout << "Server: OFF" << endl;
     } else {
         cout << "Server: ON" << endl;
         connect(this, SIGNAL(newConnection()), this, SLOT(demandeConnexion()));
     }
-
+    // Create the UART
+    uart = new SerialData(QString("2929"), nullptr);
+    // Set length of message to 0
     tailleMessage = 0;
 }
 

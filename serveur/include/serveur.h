@@ -7,6 +7,7 @@
 #include <QtNetwork>
 #include <QString>
 #include <iostream>
+#include "serialdata.h"
 
 #include "message.h"
 
@@ -33,6 +34,7 @@ class ServeurTcp : public QTcpServer {
     private:
 	    QList<QTcpSocket *> clients;
 		quint16 tailleMessage;
+        SerialData *uart;
 //        QString current_message;
 };
 
