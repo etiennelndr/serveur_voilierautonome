@@ -19,7 +19,10 @@ Message::~Message() {
     delete ecoute;
 }
 
-// Encodeur et décodeur pour l'UART et le TCP/IP
+/**
+ * @brief Message::encodeData : Encodeur pour l'UART et le TCP/IP
+ * @return
+ */
 QString Message::encodeData() {
     // Initialisation de la trame
     string msg = "__&";
@@ -74,11 +77,15 @@ QString Message::encodeData() {
     }
 
     // Fermeture de la trame
-    msg += "__";
+    msg += "__\r\n";
 
     return QString::fromStdString(msg);
 }
 
+/**
+ * @brief Message::decodeData : Décodeur pour l'UART et le TCP/IP
+ * @param msg
+ */
 void Message::decodeData(QString msg) {
     // Concert from QString to string
     string data = msg.toStdString();
@@ -88,7 +95,7 @@ void Message::decodeData(QString msg) {
 
     // If we don't have correct symbols at the beginning and the end
     // of the data we MUST return an error
-    if (splitData[0] != "__" || splitData[splitData.size()-1] != "__") {
+    if (splitData[0] != "__" || splitData[splitData.size()-1] != "__\r\n") {
         error = true;
         return;
     }
