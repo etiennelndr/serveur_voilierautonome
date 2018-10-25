@@ -84,7 +84,7 @@ void ServeurTcp::readDataFromTCPIP() {
     Message data;
     data.decodeData(message);
     // Check if it's the first connection
-    if (!checkConnectionTCPIP(data, socket))
+    if (!checkConnectionTCPIP(data, socket)) // If not we must treat the datas
         treatTCPIPMessage(data);
 
     // On renvoie le message à tous les clients sauf celui qui a envoyé les données
@@ -307,6 +307,8 @@ boolean ServeurTcp::checkConnectionTCPIP(Message data, QTcpSocket* socket) {
     int index = clients.indexOf(socket);
     linkBetweenClientsAndPC.insert(make_pair(index, *data.getIdSender()));
     linkBetweenPCAndClients.insert(make_pair(*data.getIdSender(), index));
+
+    cout << "Nouveau client:" << *data.getIdSender() << endl;
 
     return true;
 }
