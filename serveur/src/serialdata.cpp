@@ -34,6 +34,11 @@ SerialData::~SerialData() {
     delete mPort;
 }
 
+/*--------------------------*
+ *                          *
+ *         METHODS          *
+ *                          *
+ *--------------------------*/
 /**
  * METHOD
  *
@@ -47,6 +52,11 @@ void SerialData::sendData(Message msg) {
     mPort->write(data.toStdString().c_str(), data.length());
 }
 
+/*--------------------------*
+ *                          *
+ *          SLOTS           *
+ *                          *
+ *--------------------------*/
 /**
  * SLOT -> this slot is called when readyRead() signal is emitted
  *

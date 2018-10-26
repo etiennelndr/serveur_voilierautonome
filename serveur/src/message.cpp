@@ -29,6 +29,11 @@ Message::~Message() {
     delete ecoute;
 }
 
+/*--------------------------*
+ *                          *
+ *         METHODS          *
+ *                          *
+ *--------------------------*/
 /**
  * METHOD
  *
@@ -109,7 +114,13 @@ void Message::decodeData(QString msg) {
 
     // If we don't have correct symbols at the beginning and the end
     // of the data we MUST return an error
-    if (splitData[0] != "__" || splitData[splitData.size()-1] != "__") {
+    // Also the message MUST contain an id_sender, an id_concern, an
+    // id_dest and a type
+    if (splitData[0] != "__" || splitData[splitData.size()-1] != "__"
+            || !id_sender
+            || !id_concern
+            || !id_dest
+            || !type) {
         error = true;
         return;
     }

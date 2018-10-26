@@ -30,6 +30,11 @@ MainWindow::~MainWindow() {
     delete send_button;
 }
 
+/*--------------------------*
+ *                          *
+ *         METHODS          *
+ *                          *
+ *--------------------------*/
 /**
  * METHOD
  *
@@ -40,6 +45,11 @@ void MainWindow::write_in_konsole(QString log) {
     ui->konsole->appendPlainText(log);
 }
 
+/*--------------------------*
+ *                          *
+ *          SLOTS           *
+ *                          *
+ *--------------------------*/
 /**
  * SLOT ->
  *
@@ -66,7 +76,7 @@ void MainWindow::send() {
     if (serveur) {
         Message msg;
         msg.decodeData(get_msg());
-        serveur->sendToAll(msg);
+        serveur->sendToAllComputers(msg);
         _msg->clear();
     }
 }
