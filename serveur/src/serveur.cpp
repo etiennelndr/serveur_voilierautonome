@@ -205,14 +205,10 @@ boolean ServeurTcp::checkConnectionUART(Message msg) {
         // Connection d'une station météo
         int id = *msg.getIdSender();
         weatherStationsId.append(QString(id));
-        // Now send it to the weather station
-        //sendIdToUART(id);
     } else if (*msg.getType() == "BC") {
         // Connection d'un bateau
         int id = *msg.getIdSender();
         boatsId.append(QString(id));
-        // Now send it to the boat
-        //sendIdToUART(id);
     }
 
     return true;
@@ -236,24 +232,6 @@ boolean ServeurTcp::checkConnectionTCPIP(Message data, QTcpSocket* socket) {
     cout << "Nouveau client:" << *data.getIdSender() << endl;
 
     return true;
-}
-
-/**
- * METHOD
- *
- * @brief ServeurTcp::sendIdToUART : TODO
- * @param id
- * @param type
- */
-void ServeurTcp::sendIdToUART(int id) {
-    // Create the message
-    Message msg;
-    msg.setType(new string("S"));
-    msg.setIdConcern(new int(id));
-    msg.setIdSender(new int(0));
-    msg.setIdDest(new int(id));
-    // Now send it
-    uart->sendData(msg);
 }
 
 /**
@@ -337,8 +315,10 @@ void ServeurTcp::readDataFromTCPIP() {
     // Verify if an error occured during the decoding
     if (!data.getError()) {
         // Check if it's the first connection
-        if (!checkConnectionTCPIP(data, socket)) // If not we must treat the datas
-
+        if (!checkConnectionTCPIP(data, socket)) {
+            // If not we must send the datas to the boat
+            sendToBoat(data, *data.getIdSender());
+        }
     }
 
     // Remise de la taille du message à 0 pour permettre la réception des futurs messages
