@@ -93,7 +93,7 @@ class Message {
         bool verifyMessage(string debut, string fin);
 
         int random_low  = 0;
-        int random_high = 0;
+        int random_high = 999;
 
         // This method is useful to split encoding message
         vector<string> splitMessage(string& data, char delimiter);
