@@ -6,6 +6,7 @@
  * @brief Message::Message : Constructor for Message class
  */
 Message::Message() {
+    qsrand(uint(QTime::currentTime().msec()));
     error = false;
 }
 
@@ -42,9 +43,14 @@ Message::~Message() {
  */
 QString Message::encodeData() {
     // Initialisation de la trame
-    string msg = "__&";
+    string msg = SEPARATOR_DEBUT;
+    // Generate a random key and add it to the message
+    string key = to_string(qrand() % ((random_high + 1) - random_low) + random_low);
+    msg += key;
+    // Add a seperator
+    msg += string(1, SEPARATOR);
 
-    // Type (B, M ou S)
+    // Type (B, BC, M, MC ou S)
     if (type) {
         msg += "type" + string(1, SEPARATOR) + *type + "&";
     }
@@ -94,7 +100,7 @@ QString Message::encodeData() {
     }
 
     // Fermeture de la trame
-    msg += "__";
+    msg += key + SEPARATOR_FIN;
 
     return QString::fromStdString(msg);
 }
@@ -116,11 +122,7 @@ void Message::decodeData(QString msg) {
     // of the data we MUST return an error
     // Also the message MUST contain an id_sender, an id_concern, an
     // id_dest and a type
-    if (splitData[0] != "__" || splitData[splitData.size()-1] != "__"
-            || !id_sender
-            || !id_concern
-            || !id_dest
-            || !type) {
+    if (verifyMessage(splitData[0], splitData[splitData.size()-1])) {
         error = true;
         return;
     }
@@ -129,6 +131,26 @@ void Message::decodeData(QString msg) {
     for (unsigned int i=1; i < splitData.size()-1; i++) {
         assignValueToCorrectAttribute(splitData[i]);
     }
+}
+
+/**
+ * METHOD
+ *
+ * @brief Message::verifyMessage : Verify the beginning and the end of the message (separators and key)
+ * @param debut
+ * @param fin
+ * @return
+ */
+bool Message::verifyMessage(string debut, string fin) {
+    return debut.length() < 3
+            || fin.length() < 3
+            || debut.substr(0, 2) != SEPARATOR_DEBUT
+            || fin.substr(fin.length()-2, fin.length()) != SEPARATOR_FIN
+            || debut.substr(2, debut.length()) != fin.substr(0, fin.length()-2)
+            || !id_sender
+            || !id_concern
+            || !id_dest
+            || !type;
 }
 
 /**

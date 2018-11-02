@@ -7,6 +7,8 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <QtGlobal>
+#include <QTime>
 
 using namespace std;
 
@@ -54,35 +56,44 @@ class Message {
 
     private:
         // Type (B, M ou S)
-        string* type=nullptr ;
+        string* type=nullptr;
         // Id de l'objet qui envoie -> 1, 2, ... pour bateaux, 0 pour serveur,  -1, -2, ... pour stations météos
-        int* id_sender=nullptr ;
+        int* id_sender=nullptr;
         // Id de l'objet qui doit recevoir
-        int* id_dest=nullptr ;
+        int* id_dest=nullptr;
         // Id de l'objet concerné
-        int* id_concern=nullptr ;
+        int* id_concern=nullptr;
         // Position GPS: longitude (du vent ou du bateau)
-        float* longitude=nullptr ;
+        float* longitude=nullptr;
         // Position GPS: latitude (du vent ou du bateau)
-        float* latitude=nullptr ;
+        float* latitude=nullptr;
         // Cap (du vent ou du bateau)
-        float* cap=nullptr ;
+        float* cap=nullptr;
         // Vitesse (du vent ou du bateau)
-        float* vitesse=nullptr ;
+        float* vitesse=nullptr;
         // Gite du bateau
-        float* gite=nullptr ;
+        float* gite=nullptr;
         // Tangage du bateau
-        float* tangage=nullptr ;
+        float* tangage=nullptr;
         // Barre du bateau
-        float* barre=nullptr ;
+        float* barre=nullptr;
         // Ecoute du bateau
-        float* ecoute=nullptr ;
+        float* ecoute=nullptr;
 
         // Séparateur entre le nom de la donnée et la valeur de celle-ci
         char SEPARATOR = char(*":");
 
+        string SEPARATOR_DEBUT = "__";
+        string SEPARATOR_FIN   = "//";
+
         // Permet de vérifier si un erreur est apparue lors du décodage d'un message
         bool error;
+
+        // Verify the beginning and the end of the message (separators and key)
+        bool verifyMessage(string debut, string fin);
+
+        int random_low  = 0;
+        int random_high = 0;
 
         // This method is useful to split encoding message
         vector<string> splitMessage(string& data, char delimiter);

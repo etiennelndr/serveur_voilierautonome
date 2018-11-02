@@ -1,0 +1,12 @@
+INPUT(
+./debug\main.o
+./debug\serveur.o
+./debug\message.o
+./debug\mainwindow.o
+./debug\serialdata.o
+./debug\database.o
+./debug\moc_serveur.o
+./debug\moc_mainwindow.o
+./debug\moc_serialdata.o
+./debug\moc_database.o
+);

@@ -21,7 +21,7 @@ class ServeurTcp : public QTcpServer {
     Q_OBJECT
     public:
         ServeurTcp(quint16 port);
-		~ServeurTcp();
+        ~ServeurTcp();
         void sendToAllExceptWeatherStation(Message message);
         void sendToAllComputersExcept(Message message, QTcpSocket* client);
         void sendToAllComputers(Message message);
