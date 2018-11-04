@@ -50,3 +50,5 @@
 *.out
 *.app
 *.user
+*.Debug
+*.Release

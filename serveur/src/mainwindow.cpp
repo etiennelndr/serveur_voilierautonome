@@ -76,8 +76,12 @@ void MainWindow::send() {
     if (serveur) {
         Message msg;
         msg.decodeData(get_msg());
-        serveur->sendToAllComputers(msg);
+        if (!msg.getError())
+            serveur->sendToAllComputers(msg);
+        else
+            write_in_konsole("ERROR : " + msg.encodeData());
         _msg->clear();
+        // __75&type:S&id_sender:0&id_concern:1&id_dest:1&75//
     }
 }
 

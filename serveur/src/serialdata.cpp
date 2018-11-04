@@ -3,7 +3,7 @@
 /**
  * CONSTRUCTOR
  *
- * @brief SerialData::SerialData
+ * @brief SerialData::SerialData : TODO
  * @param port
  * @param parent
  */
@@ -27,7 +27,7 @@ SerialData::SerialData(QString port, QObject *parent) : QObject(parent) {
 /**
  * DESTRUCTOR
  *
- * @brief SerialData::~SerialData
+ * @brief SerialData::~SerialData : TODO
  */
 SerialData::~SerialData() {
     mPort->close();

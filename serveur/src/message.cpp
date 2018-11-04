@@ -48,7 +48,7 @@ QString Message::encodeData() {
     string key = to_string(qrand() % ((random_high + 1) - random_low) + random_low);
     msg += key;
     // Add a seperator
-    msg += string(1, SEPARATOR);
+    msg += "&";
 
     // Type (B, BC, M, MC ou S)
     if (type) {
@@ -122,7 +122,7 @@ void Message::decodeData(QString msg) {
     // of the data we MUST return an error
     // Also the message MUST contain an id_sender, an id_concern, an
     // id_dest and a type
-    if (verifyMessage(splitData[0], splitData[splitData.size()-1])) {
+    if (verifyMessage(data, splitData[0], splitData[splitData.size()-1])) {
         error = true;
         return;
     }
@@ -141,16 +141,16 @@ void Message::decodeData(QString msg) {
  * @param fin
  * @return
  */
-bool Message::verifyMessage(string debut, string fin) {
-    return debut.length() < 3
-            || fin.length() < 3
-            || debut.substr(0, 2) != SEPARATOR_DEBUT
-            || fin.substr(fin.length()-2, fin.length()) != SEPARATOR_FIN
-            || debut.substr(2, debut.length()) != fin.substr(0, fin.length()-2)
-            || !id_sender
-            || !id_concern
-            || !id_dest
-            || !type;
+bool Message::verifyMessage(string data, string debut, string fin) {
+    return debut.length()                           < 3
+        || fin.length()                             < 3
+        || debut.substr(0, 2)                       != SEPARATOR_DEBUT
+        || fin.substr(fin.length()-2, fin.length()) != SEPARATOR_FIN
+        || debut.substr(2, debut.length())          != fin.substr(0, fin.length()-2)
+        || data.find("id_sender:")                  == string::npos
+        || data.find("id_concern:")                 == string::npos
+        || data.find("id_dest:")                    == string::npos
+        || data.find("type:")                       == string::npos;
 }
 
 /**

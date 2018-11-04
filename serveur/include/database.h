@@ -3,6 +3,10 @@
 
 #include <QObject>
 #include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QVariant>
+#include "message.h"
 
 /**
  * @brief The Database class
@@ -12,6 +16,12 @@ class Database : public QObject {
     public:
         Database(QString hostName, QString dbName, QString userName, QString password);
         ~Database();
+
+        // Reset the database
+        QSqlError resetDatabase();
+
+        // Inset in the database
+        QSqlError insertInDatabase(Message msg);
 
     private:
         // Qt Database
@@ -28,7 +38,26 @@ class Database : public QObject {
         // State
         bool state;
 
+        // Avoid simple creation of Database
         Database();
+
+        // Database columns name
+        static const QString TYPE;
+        static const QString IDSENDER;
+        static const QString IDDEST;
+        static const QString IDCONCERN;
+        static const QString LONGITUDE;
+        static const QString LATITUDE;
+        static const QString CAP;
+        static const QString VITESSE;
+        static const QString GITE;
+        static const QString TANGAGE;
+        static const QString BARRE;
+        static const QString ECOUTE;
+
+        // Transform a message to a query
+        void transformMessageToQuery(QSqlQuery &query, Message msg, QString &columnsName, QString &values);
+        void addNewValueAndColumnName(QString &columnsName, QString columnName, QString& values, bool &isFirst);
 
     signals:
         void isConnected(bool);

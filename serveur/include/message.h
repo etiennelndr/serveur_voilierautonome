@@ -90,7 +90,7 @@ class Message {
         bool error;
 
         // Verify the beginning and the end of the message (separators and key)
-        bool verifyMessage(string debut, string fin);
+        bool verifyMessage(string data, string debut, string fin);
 
         int random_low  = 0;
         int random_high = 999;
