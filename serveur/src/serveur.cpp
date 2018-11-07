@@ -25,6 +25,34 @@ ServeurTcp::ServeurTcp(quint16 port) {
 }
 
 /**
+ * @brief ServeurTcp::ServeurTcp
+ * @param port
+ * @param isMoc
+ */
+ServeurTcp::ServeurTcp(quint16 port, bool isMoc) : isMocUART(isMoc) {
+    // Open the connection
+    if (!(listen(QHostAddress::Any, port))) {
+        cout << "Server: OFF" << endl;
+    } else {
+        cout << "Server: ON" << endl;
+        connect(this, SIGNAL(newConnection()), this, SLOT(demandeConnexion()));
+    }
+
+    // Create the UART
+    uart = new SerialData(QString("COM1"), nullptr);
+    // Connect it -> when receivedDataFromUART signal is emitted, call readDataFromUART slot
+    connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
+
+    if (isMocUART) {
+        mocUART = new UARTThread(this);
+        mocUART->start();
+    }
+
+    // Set length of message to 0
+    tailleMessage = 0;
+}
+
+/**
  * DESTRUCTOR
  *
  * @brief ServeurTcp::~ServeurTcp : TODO
@@ -32,6 +60,9 @@ ServeurTcp::ServeurTcp(quint16 port) {
 ServeurTcp::~ServeurTcp() {
     qDeleteAll(clients);
     delete uart;
+    if (isMocUART) {
+        mocUART->stop();
+    }
     cout << "Server: OFF" << endl;
 }
 
@@ -259,6 +290,24 @@ void ServeurTcp::sendToBoat(Message msg, int id) {
     sendDataToUART(msg);
 }
 
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::isComputerConnected
+ * @param id
+ * @return
+ */
+bool ServeurTcp::isComputerConnected(int id) {
+    try {
+        if (linkBetweenPCAndClients.size()==0)
+            return false;
+        int t = linkBetweenPCAndClients.at(id);
+    } catch (const std::out_of_range& oor) {
+        return false;
+    }
+    return true;
+}
+
 /*--------------------------*
  *                          *
  *          SLOTS           *
@@ -360,13 +409,14 @@ void ServeurTcp::readDataFromUART(Message msg) {
                 // First of all, treat the datas
                 treatBoatDatas(msg);
 
-                Message datas;
-                // Send all datas to the computer which is linked to the boat
-                sendToComputer(msg, *msg.getIdSender());
-                // Send longitude and latitude to other boats
-                sendToAllBoatsExcept(msg, *msg.getIdSender());
-                // Send longitude and latitude to other computers
-                sendToAllComputersExcept(msg, clients[linkBetweenPCAndClients.at(*msg.getIdSender())]);
+                if (isComputerConnected(*msg.getIdSender())) {
+                    // Send all datas to the computer which is linked to the boat
+                    sendToComputer(msg, *msg.getIdSender());
+                    // Send longitude and latitude to other boats
+                    sendToAllBoatsExcept(msg, *msg.getIdSender());
+                    // Send longitude and latitude to other computers
+                    sendToAllComputersExcept(msg, clients[linkBetweenPCAndClients.at(*msg.getIdSender())]);
+                }
             } else if (*msg.getIdSender() < 0) {
                 // This message comes from a weather station
                 sendToAllExceptWeatherStation(msg);

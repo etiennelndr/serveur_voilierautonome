@@ -1,5 +1,6 @@
 #include <QApplication>
 #include "mainwindow.h"
+#include "message.h"
 
 using namespace std;
 
@@ -12,6 +13,7 @@ using namespace std;
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     MainWindow mw;
+    qRegisterMetaType<Message>("Message");
     mw.show();
     return app.exec();
 }

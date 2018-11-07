@@ -7,9 +7,9 @@
 #include <QtNetwork>
 #include <QString>
 #include <iostream>
-#include "serialdata.h"
 #include <map>
-
+#include "moc_uart.h"
+#include "serialdata.h"
 #include "message.h"
 
 using namespace std;
@@ -21,6 +21,7 @@ class ServeurTcp : public QTcpServer {
     Q_OBJECT
     public:
         ServeurTcp(quint16 port);
+        ServeurTcp(quint16 port, bool isMoc);
         ~ServeurTcp();
         void sendToAllExceptWeatherStation(Message message);
         void sendToAllComputersExcept(Message message, QTcpSocket* client);
@@ -29,7 +30,6 @@ class ServeurTcp : public QTcpServer {
         void sendToAllBoatsExcept(Message message, int id);
         boolean checkConnectionUART(Message msg);
         boolean checkConnectionTCPIP(Message data, QTcpSocket* socket);
-//        QString get_message() {return current_message;}
 
 
     public slots:
@@ -45,7 +45,6 @@ class ServeurTcp : public QTcpServer {
 	    QList<QTcpSocket *> clients;
 		quint16 tailleMessage;
         SerialData *uart;
-//        QString current_message;
 
         void sendDataToUART(Message msg);
         void sendIdToUART(int id);
@@ -56,7 +55,13 @@ class ServeurTcp : public QTcpServer {
         QStringList boatsId;
         map<int, int> linkBetweenClientsAndPC;
         map<int, int> linkBetweenPCAndClients;
+
+        bool isComputerConnected(int id);
+
+        // This is for the moc uart
+        UARTThread* mocUART;
+        bool isMocUART;
 };
 
 
-#endif // !SERVEUR_H
+#endif // SERVEUR_H
