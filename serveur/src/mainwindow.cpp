@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWin
     send_button->setGeometry(100,200,180,50);
     send_button->setText("Send message to all clients");
     _msg = new QLineEdit(this);
-    _msg->setGeometry(140,175,100,20);
+    _msg->setGeometry(13,175,371,20);
 
     connect(ui->lancement_serveur, SIGNAL(clicked()), this, SLOT(state()));
     connect(send_button, SIGNAL(clicked()), this, SLOT(send()));
