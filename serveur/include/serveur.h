@@ -8,7 +8,7 @@
 #include <QString>
 #include <iostream>
 #include <map>
-#include "moc_uart.h"
+#include "mocUart.h"
 #include "serialdata.h"
 #include "message.h"
 

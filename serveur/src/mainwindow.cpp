@@ -42,7 +42,7 @@ MainWindow::~MainWindow() {
  * @param log
  */
 void MainWindow::write_in_konsole(QString log) {
-    //ui->konsole->insertPlainText(log);
+    //ui->konsole->append(log);
     cout << log.toStdString() << endl;
 }
 

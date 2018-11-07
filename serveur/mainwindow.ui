@@ -33,7 +33,7 @@
      <string>Lancement Serveur</string>
     </property>
    </widget>
-   <widget class="QPlainTextEdit" name="konsole">
+   <widget class="QTextEdit" name="konsole">
     <property name="geometry">
      <rect>
       <x>13</x>
@@ -41,9 +41,6 @@
       <width>371</width>
       <height>321</height>
      </rect>
-    </property>
-    <property name="readOnly">
-     <bool>true</bool>
     </property>
    </widget>
   </widget>
@@ -53,7 +50,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>20</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">

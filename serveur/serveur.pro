@@ -31,7 +31,7 @@ SOURCES += main/main.cpp \
     src/serveur.cpp \
     src/database.cpp \
     src/serialdata.cpp \
-    moc/moc_uart.cpp
+    moc/mocUart.cpp
 
 
 HEADERS += include/serveur.h \
@@ -39,7 +39,7 @@ HEADERS += include/serveur.h \
     include/mainwindow.h \
     include/database.h \
     include/serialdata.h \
-    moc/moc_uart.h
+    moc/mocUart.h
 
 FORMS += \
     mainwindow.ui
