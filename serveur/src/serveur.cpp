@@ -303,6 +303,7 @@ bool ServeurTcp::isComputerConnected(int id) {
             return false;
         int t = linkBetweenPCAndClients.at(id);
     } catch (const std::out_of_range& oor) {
+        std::cerr << "Out of Range error: " << oor.what() << '\n';
         return false;
     }
     return true;
@@ -409,13 +410,13 @@ void ServeurTcp::readDataFromUART(Message msg) {
                 // First of all, treat the datas
                 treatBoatDatas(msg);
 
-                if (isComputerConnected(*msg.getIdSender())) {
+                if (isComputerConnected(*msg.getIdConcern())) {
                     // Send all datas to the computer which is linked to the boat
-                    sendToComputer(msg, *msg.getIdSender());
+                    sendToComputer(msg, *msg.getIdConcern());
                     // Send longitude and latitude to other boats
-                    sendToAllBoatsExcept(msg, *msg.getIdSender());
+                    sendToAllBoatsExcept(msg, *msg.getIdConcern());
                     // Send longitude and latitude to other computers
-                    sendToAllComputersExcept(msg, clients[linkBetweenPCAndClients.at(*msg.getIdSender())]);
+                    sendToAllComputersExcept(msg, clients[linkBetweenPCAndClients.at(*msg.getIdConcern())]);
                 }
             } else if (*msg.getIdSender() < 0) {
                 // This message comes from a weather station

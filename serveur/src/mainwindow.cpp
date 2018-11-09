@@ -59,7 +59,7 @@ void MainWindow::write_in_konsole(QString log) {
 void MainWindow::state() {
     if (ui->lancement_serveur->text() == QString("Lancement Serveur")) {
         ui->lancement_serveur->setText("Arrêt Serveur");
-        serveur = new ServeurTcp (4000, true);
+        serveur = new ServeurTcp (4000, false);
         connect(serveur, SIGNAL(received_data(QString)), this, SLOT(msg_processing(QString)));
     } else if (ui->lancement_serveur->text() == QString("Arrêt Serveur")) {
         ui->lancement_serveur->setText("Lancement Serveur");
