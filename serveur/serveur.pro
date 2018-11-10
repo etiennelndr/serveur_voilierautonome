@@ -22,8 +22,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
-DEPENDPATH += . include main src moc
-INCLUDEPATH += . include moc
+DEPENDPATH += . include main src moc src/elements
+INCLUDEPATH += . include moc include/elements
 
 SOURCES += main/main.cpp \
     src/message.cpp \
@@ -31,7 +31,10 @@ SOURCES += main/main.cpp \
     src/serveur.cpp \
     src/database.cpp \
     src/serialdata.cpp \
-    moc/mocUart.cpp
+    moc/mocUart.cpp \
+    src/elements/boat.cpp \
+    src/elements/computer.cpp \
+    src/elements/weatherstation.cpp
 
 
 HEADERS += include/serveur.h \
@@ -39,7 +42,10 @@ HEADERS += include/serveur.h \
     include/mainwindow.h \
     include/database.h \
     include/serialdata.h \
-    moc/mocUart.h
+    moc/mocUart.h \
+    include/elements/boat.h \
+    include/elements/computer.h \
+    include/elements/weatherstation.h
 
 FORMS += \
     mainwindow.ui

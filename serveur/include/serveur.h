@@ -11,6 +11,9 @@
 #include "mocUart.h"
 #include "serialdata.h"
 #include "message.h"
+#include "boat.h"
+#include "computer.h"
+#include "weatherstation.h"
 
 using namespace std;
 
@@ -51,10 +54,12 @@ class ServeurTcp : public QTcpServer {
         void treatBoatDatas(Message msg);
         void sendToBoat(Message msg, int id);
 
+        // ---- WILL BE DELETED IN THE FUTURE ----
         QStringList weatherStationsId;
         QStringList boatsId;
         map<int, int> linkBetweenClientsAndPC;
         map<int, int> linkBetweenPCAndClients;
+        // ---- WILL BE DELETED IN THE FUTURE ----
 
         bool isComputerConnected(int id);
 
