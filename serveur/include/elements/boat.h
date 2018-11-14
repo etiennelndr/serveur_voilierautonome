@@ -2,12 +2,15 @@
 #define BOAT_H
 
 
+class Message;
+
+
 /**
  * @brief The Boat class
  */
 class Boat {
     public:
-        Boat(int id);
+        Boat();
 
         //getters
         float  get_vitesse()        {return vitesse;}
@@ -17,7 +20,7 @@ class Boat {
         float  get_gite()           {return gite;}
         float  get_tangage()        {return tangage;}
         float  get_barre()          {return barre;}
-        float  get_voile()          {return voile;}
+        float  get_ecoute()          {return ecoute;}
         float* get_vitesse_addr()   {return &vitesse;}
         float* get_cap_addr()       {return &cap;}
         float* get_longitude_addr() {return &longitude;}
@@ -25,7 +28,7 @@ class Boat {
         float* get_gite_addr()      {return &gite;}
         float* get_tangage_addr()   {return &tangage;}
         float* get_barre_addr()     {return &barre;}
-        float* get_voile_addr()     {return &voile;}
+        float* get_ecoute_addr()     {return &ecoute;}
         int    get_id()             {return id;}
 
         //setters
@@ -36,7 +39,9 @@ class Boat {
         void set_tangage(float _tangage)    {tangage=_tangage;}
         void set_gite(float _gite)          {gite=_gite;}
         void set_barre(float _barre)        {barre=_barre;}
-        void set_voile(float _voile)        {voile=_voile;}
+        void set_ecoute(float _ecoute)        {ecoute=_ecoute;}
+
+        void init(Message m);
 
     private:
         float vitesse;
@@ -46,7 +51,7 @@ class Boat {
         float gite;
         float tangage;
         float barre;
-        float voile;
+        float ecoute;
         int id; //Identifiant du bateau pour la communication des data
 };
 

@@ -25,34 +25,6 @@ ServeurTcp::ServeurTcp(quint16 port) {
 }
 
 /**
- * @brief ServeurTcp::ServeurTcp
- * @param port
- * @param isMoc
- */
-ServeurTcp::ServeurTcp(quint16 port, bool isMoc) : isMocUART(isMoc) {
-    // Open the connection
-    if (!(listen(QHostAddress::Any, port))) {
-        cout << "Server: OFF" << endl;
-    } else {
-        cout << "Server: ON" << endl;
-        connect(this, SIGNAL(newConnection()), this, SLOT(demandeConnexion()));
-    }
-
-    // Create the UART
-    uart = new SerialData(QString("COM1"), nullptr);
-    // Connect it -> when receivedDataFromUART signal is emitted, call readDataFromUART slot
-    connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
-
-    if (isMocUART) {
-        mocUART = new UARTThread(this);
-        mocUART->start();
-    }
-
-    // Set length of message to 0
-    tailleMessage = 0;
-}
-
-/**
  * DESTRUCTOR
  *
  * @brief ServeurTcp::~ServeurTcp : TODO
@@ -60,9 +32,6 @@ ServeurTcp::ServeurTcp(quint16 port, bool isMoc) : isMocUART(isMoc) {
 ServeurTcp::~ServeurTcp() {
     qDeleteAll(clients);
     delete uart;
-    if (isMocUART) {
-        mocUART->stop();
-    }
     cout << "Server: OFF" << endl;
 }
 
@@ -105,23 +74,28 @@ void ServeurTcp::sendToAllExceptWeatherStation(Message message) {
         QByteArray paquet;
         QDataStream out(&paquet, QIODevice::WriteOnly);
 
+
         // Create the data
         Message msg;
         msg.setType(new string("S"));
         msg.setIdSender(new int(0));
-        msg.setIdConcern(message.getIdSender());
-        msg.setIdDest(new int(linkBetweenClientsAndPC.at(i)));
         msg.setCap(message.getCap());
         msg.setVitesse(message.getVitesse());
         msg.setLatitude(message.getLatitude());
         msg.setLongitude(message.getLongitude());
+        msg.setIdConcern(message.getIdSender());
 
-        out << quint16(0);    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
-        out << msg.encodeData();        // On ajoute le message à la suite
-        out.device()->seek(0); // On se replace au début du paquet
-        out << quint16((paquet.size() - int(sizeof(quint16)))); // On écrase le 0 qu'on avait réservé par la longueur du message
-        // Send the data to the specific computer
-        clients[i]->write(paquet);
+        Computer c;
+        if (getComputerWithIndexOfSocket(c, i)) {
+            msg.setIdDest(new int(c.getId()));
+
+            out << quint16(0);    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
+            out << msg.encodeData();        // On ajoute le message à la suite
+            out.device()->seek(0); // On se replace au début du paquet
+            out << quint16((paquet.size() - int(sizeof(quint16)))); // On écrase le 0 qu'on avait réservé par la longueur du message
+            // Send the data to the specific computer
+            clients[i]->write(paquet);
+        }
 
         // Set the id of  the recipient
         msg.setIdDest(new int(i));
@@ -137,7 +111,7 @@ void ServeurTcp::sendToAllExceptWeatherStation(Message message) {
  * @param message
  * @param client
  */
-void ServeurTcp::sendToAllComputersExcept(Message message, QTcpSocket* client) {
+void ServeurTcp::sendToAllComputersExcept(Message message, int indexOfSocketToIgnore) {
     // Préparation du paquet
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
@@ -148,17 +122,20 @@ void ServeurTcp::sendToAllComputersExcept(Message message, QTcpSocket* client) {
     msg.setIdConcern(message.getIdSender());
     // Envoi du paquet préparé à tous les clients connectés au serveur
     for (int i = 0; i < clients.size(); i++) {
-        if (clients[i]->socketDescriptor() != client->socketDescriptor()) {
-            msg.setIdDest(new int(linkBetweenClientsAndPC.at(i)));
-            msg.setLatitude(message.getLatitude());
-            msg.setLongitude(message.getLongitude());
+        if (i != indexOfSocketToIgnore) {
+            Computer c;
+            if (getComputerWithIndexOfSocket(c, i)) {
+                msg.setIdDest(new int(c.getId()));
+                msg.setLatitude(message.getLatitude());
+                msg.setLongitude(message.getLongitude());
 
-            out << quint16(0);    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
-            out << msg.encodeData();        // On ajoute le message à la suite
-            out.device()->seek(0); // On se replace au début du paquet
-            out << quint16((paquet.size() - int(sizeof(quint16)))); // On écrase le 0 qu'on avait réservé par la longueur du message
+                out << quint16(0);    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
+                out << msg.encodeData();        // On ajoute le message à la suite
+                out.device()->seek(0); // On se replace au début du paquet
+                out << quint16((paquet.size() - int(sizeof(quint16)))); // On écrase le 0 qu'on avait réservé par la longueur du message
 
-            clients[i]->write(paquet);
+                clients[i]->write(paquet);
+            }
         }
     }
 }
@@ -186,7 +163,11 @@ void ServeurTcp::sendToComputer(Message message, int id) {
     out << quint16((paquet.size() - int(sizeof(quint16)))); // On écrase le 0 qu'on avait réservé par la longueur du message
 
     // Envoi du paquet préparé au client demandé
-    clients[linkBetweenPCAndClients.at(id)]->write(paquet);
+    Computer c;
+    // Récupération du PC associé à l'id en vérifiant si celui-ci est
+    // présent dans le vecteur computers
+    if (getComputerWithId(c, id))
+        clients[c.getIndexOfSocket()]->write(paquet);
 }
 
 /**
@@ -234,12 +215,10 @@ boolean ServeurTcp::checkConnectionUART(Message msg) {
 
     if (*msg.getType() == "MC") {
         // Connection d'une station météo
-        int id = *msg.getIdSender();
-        weatherStationsId.append(QString(id));
+        addNewWeatherStation(msg);
     } else if (*msg.getType() == "BC") {
         // Connection d'un bateau
-        int id = *msg.getIdSender();
-        boatsId.append(QString(id));
+        addNewBoat(msg);
     }
 
     return true;
@@ -257,8 +236,7 @@ boolean ServeurTcp::checkConnectionTCPIP(Message data, QTcpSocket* socket) {
         return false;
 
     int index = clients.indexOf(socket);
-    linkBetweenClientsAndPC.insert(make_pair(index, *data.getIdSender()));
-    linkBetweenPCAndClients.insert(make_pair(*data.getIdSender(), index));
+    addNewComputer(data, index);
 
     cout << "Nouveau client:" << *data.getIdSender() << endl;
 
@@ -293,20 +271,82 @@ void ServeurTcp::sendToBoat(Message msg, int id) {
 /**
  * METHOD
  *
- * @brief ServeurTcp::isComputerConnected
+ * @brief ServeurTcp::getComputer : TODO
+ * @param c
  * @param id
  * @return
  */
-bool ServeurTcp::isComputerConnected(int id) {
-    try {
-        if (linkBetweenPCAndClients.size()==0)
-            return false;
-        int t = linkBetweenPCAndClients.at(id);
-    } catch (const std::out_of_range& oor) {
-        std::cerr << "Out of Range error: " << oor.what() << '\n';
-        return false;
+bool ServeurTcp::getComputerWithId(Computer &c, int id) {
+    for (unsigned int i=0; i<computers.size(); i++) {
+        if (computers[i].getId() == id) {
+            c = computers[i];
+            return true;
+        }
     }
-    return true;
+    return false;
+}
+
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::getComputerWithIndexOfSocket : TODO
+ * @param c
+ * @param indexOfSocket
+ * @return
+ */
+bool ServeurTcp::getComputerWithIndexOfSocket(Computer &c, int indexOfSocket) {
+    for (unsigned int i=0; i<computers.size(); i++) {
+        if (computers[i].getIndexOfSocket() == indexOfSocket) {
+            c = computers[i];
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::addNewBoat : add a new boat to the boats vector
+ * @param b
+ */
+void ServeurTcp::addNewBoat(Message b) {
+    Boat boat;
+    // Init the boat
+    boat.init(b);
+    // Push it in the vector boats
+    boats.push_back(boat);
+}
+
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::addNewComputer : add a new computer to the computers vector
+ * @param c
+ * @param indexOfSocket
+ */
+void ServeurTcp::addNewComputer(Message c, int indexOfSocket) {
+    Computer computer;
+    // Init the boat
+    computer.init(c, indexOfSocket);
+    // Push it in the vector boats
+    computers.push_back(computer);
+}
+
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::addNewWeatherStation : add a new weatherStation to the weatherStations vector
+ * @param ws
+ */
+void ServeurTcp::addNewWeatherStation(Message ws) {
+    WeatherStation weatherStation;
+    // Init the boat
+    weatherStation.init(ws);
+    // Push it in the vector boats
+    weatherStations.push_back(weatherStation);
 }
 
 /*--------------------------*
@@ -386,6 +426,11 @@ void ServeurTcp::deconnexionClient() {
     if (socket == nullptr) // Si par hasard on n'a pas trouvé le client à l'origine du signal, on arrête la méthode
         return;
 
+    int index = clients.indexOf(socket);
+    for (unsigned int i=0; i<computers.size(); i++) {
+        if (computers[i].getIndexOfSocket() == index)
+            computers.erase(computers.begin() + int(i));
+    }
     clients.removeOne(socket);
 
     socket->deleteLater();
@@ -410,13 +455,14 @@ void ServeurTcp::readDataFromUART(Message msg) {
                 // First of all, treat the datas
                 treatBoatDatas(msg);
 
-                if (isComputerConnected(*msg.getIdConcern())) {
+                Computer c;
+                if (getComputerWithId(c, *msg.getIdConcern())) {
                     // Send all datas to the computer which is linked to the boat
                     sendToComputer(msg, *msg.getIdConcern());
                     // Send longitude and latitude to other boats
                     sendToAllBoatsExcept(msg, *msg.getIdConcern());
                     // Send longitude and latitude to other computers
-                    sendToAllComputersExcept(msg, clients[linkBetweenPCAndClients.at(*msg.getIdConcern())]);
+                    sendToAllComputersExcept(msg, c.getIndexOfSocket());
                 }
             } else if (*msg.getIdSender() < 0) {
                 // This message comes from a weather station

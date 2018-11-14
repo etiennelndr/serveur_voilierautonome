@@ -31,7 +31,6 @@ SOURCES += main/main.cpp \
     src/serveur.cpp \
     src/database.cpp \
     src/serialdata.cpp \
-    moc/mocUart.cpp \
     src/elements/boat.cpp \
     src/elements/computer.cpp \
     src/elements/weatherstation.cpp
@@ -42,7 +41,6 @@ HEADERS += include/serveur.h \
     include/mainwindow.h \
     include/database.h \
     include/serialdata.h \
-    moc/mocUart.h \
     include/elements/boat.h \
     include/elements/computer.h \
     include/elements/weatherstation.h

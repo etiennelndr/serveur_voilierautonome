@@ -8,7 +8,6 @@
 #include <QString>
 #include <iostream>
 #include <map>
-#include "mocUart.h"
 #include "serialdata.h"
 #include "message.h"
 #include "boat.h"
@@ -24,16 +23,14 @@ class ServeurTcp : public QTcpServer {
     Q_OBJECT
     public:
         ServeurTcp(quint16 port);
-        ServeurTcp(quint16 port, bool isMoc);
         ~ServeurTcp();
-        void sendToAllExceptWeatherStation(Message message);
-        void sendToAllComputersExcept(Message message, QTcpSocket* client);
-        void sendToAllComputers(Message message);
-        void sendToComputer(Message message, int id);
-        void sendToAllBoatsExcept(Message message, int id);
-        boolean checkConnectionUART(Message msg);
-        boolean checkConnectionTCPIP(Message data, QTcpSocket* socket);
-
+        void sendToAllExceptWeatherStation(Message);
+        void sendToAllComputersExcept(Message, int);
+        void sendToAllComputers(Message);
+        void sendToComputer(Message, int);
+        void sendToAllBoatsExcept(Message, int);
+        boolean checkConnectionUART(Message);
+        boolean checkConnectionTCPIP(Message, QTcpSocket*);
 
     public slots:
 		void demandeConnexion();
@@ -45,27 +42,36 @@ class ServeurTcp : public QTcpServer {
         void received_data(QString);
 
     private:
+        // Each socket represents a client (= a computer)
 	    QList<QTcpSocket *> clients;
-		quint16 tailleMessage;
+        quint16             tailleMessage;
+        // UART connection for the weathers stations and the boats
         SerialData *uart;
 
-        void sendDataToUART(Message msg);
-        void sendIdToUART(int id);
-        void treatBoatDatas(Message msg);
-        void sendToBoat(Message msg, int id);
+        void sendDataToUART(Message);
+        void sendIdToUART(int);
+        void treatBoatDatas(Message);
+        void sendToBoat(Message, int);
 
         // ---- WILL BE DELETED IN THE FUTURE ----
         QStringList weatherStationsId;
         QStringList boatsId;
-        map<int, int> linkBetweenClientsAndPC;
-        map<int, int> linkBetweenPCAndClients;
         // ---- WILL BE DELETED IN THE FUTURE ----
 
-        bool isComputerConnected(int id);
+        // Boats vector
+        vector<Boat>           boats;
+        // Computers vector
+        vector<Computer>       computers;
+        // Weather stations vector
+        vector<WeatherStation> weatherStations;
 
-        // This is for the moc uart
-        UARTThread* mocUART;
-        bool isMocUART;
+        void addNewBoat(Message);
+        void addNewComputer(Message, int);
+        void addNewWeatherStation(Message);
+
+        bool isComputerConnected(int);
+        bool getComputerWithId(Computer&, int);
+        bool getComputerWithIndexOfSocket(Computer&, int);
 };
 
 
