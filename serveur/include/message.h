@@ -10,7 +10,8 @@
 #include <QtGlobal>
 #include <QTime>
 
-using namespace std;
+using std::string;
+using std::vector;
 
 /**
  * @brief The Message class
@@ -81,9 +82,10 @@ class Message {
         float* ecoute=nullptr;
 
         // Séparateur entre le nom de la donnée et la valeur de celle-ci
-        char SEPARATOR = char(*":");
-
+        string SEPARATOR       = ":";
+        // Marqueur de début de trame
         string SEPARATOR_DEBUT = "__";
+        // Marqueur de fin de trame
         string SEPARATOR_FIN   = "//";
 
         // Permet de vérifier si un erreur est apparue lors du décodage d'un message
@@ -95,8 +97,6 @@ class Message {
         int random_low  = 0;
         int random_high = 999;
 
-        // This method is useful to split encoding message
-        vector<string> splitMessage(string& data, char delimiter);
         // Used for attribute value assignment
         void assignValueToCorrectAttribute(string& data);
 };

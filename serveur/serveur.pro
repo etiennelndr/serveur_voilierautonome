@@ -22,8 +22,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 CONFIG += c++11
 
-DEPENDPATH += . include main src moc src/elements
-INCLUDEPATH += . include moc include/elements
+DEPENDPATH += . include main src moc src/elements src/utils
+INCLUDEPATH += . include moc include/elements include/utils
 
 SOURCES += main/main.cpp \
     src/message.cpp \
@@ -33,7 +33,8 @@ SOURCES += main/main.cpp \
     src/serialdata.cpp \
     src/elements/boat.cpp \
     src/elements/computer.cpp \
-    src/elements/weatherstation.cpp
+    src/elements/weatherstation.cpp \
+    src/utils/utils.cpp
 
 
 HEADERS += include/serveur.h \
@@ -43,10 +44,13 @@ HEADERS += include/serveur.h \
     include/serialdata.h \
     include/elements/boat.h \
     include/elements/computer.h \
-    include/elements/weatherstation.h
+    include/elements/weatherstation.h \
+    include/utils/utils.h
 
 FORMS += \
     mainwindow.ui
+
+#LIBS += "C:\Program Files\MySQL\MySQL Server 8.0\lib\libmysql.lib"
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

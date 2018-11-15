@@ -1,5 +1,6 @@
 #include "database.h"
 
+const QString Database::ELEMENTS  = "elements";
 const QString Database::TYPE      = "type";
 const QString Database::IDSENDER  = "id_sender";
 const QString Database::IDDEST    = "id_dest";
@@ -23,18 +24,19 @@ Database::Database(QString hostName, QString dbName, QString userName, QString p
     dbName(dbName),
     userName(userName),
     password(password) {
+    qDebug()<<QSqlDatabase::drivers();
     // Create the database using MySQL SGBDR
-    db = QSqlDatabase::addDatabase("QMYSQL");
     // Set the host name
-    db.setHostName(this->hostName);
     // Set the database name
+    QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
+    db.setHostName(this->hostName); // Ton host
+    db.setUserName(this->userName); // Ton login
+    db.setPassword(this->password); // Ton mot de passe
+    //db.setDatabaseName("Driver={SQL Server};Server=(localhost);"); // Le nom de ta database
     db.setDatabaseName(this->dbName);
-    // Set the user name
-    db.setUserName(this->userName);
-    // Set the password
-    db.setPassword(this->password);
     // Open the  database and emit its returned value
     state = db.open();
+    std::cout << db.lastError().text().toStdString() << std::endl;
     emit isConnected(state);
 }
 
@@ -66,7 +68,7 @@ QSqlError Database::resetDatabase() {
     // Delete all rows
     QSqlQuery query(db);
     // Execute the query
-    if (query.exec("DELETE FROM " + dbName))
+    if (query.exec("DELETE FROM " + ELEMENTS))
         db.commit(); // Commit changes
     else
         db.rollback(); // Else rollback changes
@@ -95,7 +97,7 @@ QSqlError Database::insertInDatabase(Message msg) {
     transformMessageToQuery(query, msg, columnsName, values);
 
     // Execute the query
-    if (query.exec("INSERT INTO " + dbName + columnsName + values))
+    if (query.exec("INSERT INTO " + ELEMENTS + columnsName + values))
         db.commit(); // Commit changes
     else
         db.rollback(); // Else rollback changes

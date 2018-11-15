@@ -13,8 +13,9 @@
 #include "boat.h"
 #include "computer.h"
 #include "weatherstation.h"
+#include "database.h"
 
-using namespace std;
+using std::string;
 
 /**
  * @brief The ServeurTcp class
@@ -72,6 +73,9 @@ class ServeurTcp : public QTcpServer {
         bool isComputerConnected(int);
         bool getComputerWithId(Computer&, int);
         bool getComputerWithIndexOfSocket(Computer&, int);
+
+        // Database to store each message
+        Database* db;
 };
 
 

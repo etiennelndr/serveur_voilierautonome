@@ -2,8 +2,6 @@
 #include "mainwindow.h"
 #include "message.h"
 
-using namespace std;
-
 /**
  * @brief qMain
  * @param argc

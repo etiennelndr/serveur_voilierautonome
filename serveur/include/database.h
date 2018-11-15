@@ -4,9 +4,13 @@
 #include <QObject>
 #include <QSqlDatabase>
 #include <QSqlQuery>
+#include <QtSql>
 #include <QSqlError>
 #include <QVariant>
 #include "message.h"
+
+//use the std namespace
+using namespace std;
 
 /**
  * @brief The Database class
@@ -41,7 +45,9 @@ class Database : public QObject {
         // Avoid simple creation of Database
         Database();
 
-        // Database columns name
+        // Database tables
+        static const QString ELEMENTS;
+        // Columns name of the table Elements
         static const QString TYPE;
         static const QString IDSENDER;
         static const QString IDDEST;

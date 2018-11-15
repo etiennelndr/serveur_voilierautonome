@@ -1,5 +1,8 @@
 #include "serveur.h"
 
+using std::cout;
+using std::endl;
+
 /**
  * CONSTRUCTOR
  *
@@ -20,6 +23,12 @@ ServeurTcp::ServeurTcp(quint16 port) {
     // Connect it -> when receivedDataFromUART signal is emitted, call readDataFromUART slot
     connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
 
+    // Connect to the database
+    db = new Database(QString("127.0.0.1"), QString("voilierautonome"), QString("user_voilierautonome"), QString("1234abcd"));
+    QSqlError err = db->resetDatabase();
+    if (err.type() != QSqlError::NoError)
+        cout << "Erreur: " << err.text().toStdString() << endl;
+
     // Set length of message to 0
     tailleMessage = 0;
 }
@@ -32,6 +41,7 @@ ServeurTcp::ServeurTcp(quint16 port) {
 ServeurTcp::~ServeurTcp() {
     qDeleteAll(clients);
     delete uart;
+    delete db;
     cout << "Server: OFF" << endl;
 }
 

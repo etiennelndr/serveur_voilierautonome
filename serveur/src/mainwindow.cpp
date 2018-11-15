@@ -1,5 +1,8 @@
 #include "mainwindow.h"
 
+using std::cout;
+using std::endl;
+
 /**
  * CONSTRUCTOR
  *

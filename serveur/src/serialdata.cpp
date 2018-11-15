@@ -1,5 +1,7 @@
 #include "serialdata.h"
 
+#include "utils.h"
+
 /**
  * CONSTRUCTOR
  *
@@ -65,10 +67,17 @@ void SerialData::sendData(Message msg) {
 void SerialData::readData() {
     QString datas = QString(mPort->readAll().data());
     qDebug() << "Serial data IN : " << datas;
-    // Decode data
-    Message msg;
-    msg.decodeData(datas);
-    // Emit a signal to inform the server we received
-    // datas from the UART
-    emit receivedDataFromUART(msg);
+
+    // Split datas because we can receive multiple messages in a single row
+    vector<string> messages = split(datas.toStdString(), "//");
+    for (unsigned int i=0; i<messages.size(); i++) {
+        // Add end marker
+        messages[i] += "//";
+        // Decode data
+        Message msg;
+        msg.decodeData(QString::fromStdString(messages[i]));
+        // Emit a signal to inform the server we received
+        // datas from the UART
+        emit receivedDataFromUART(msg);
+    }
 }
