@@ -1,6 +1,7 @@
+#include <math.h> 
+
 int i,id,id_sender, id_dest, id_concern;
-char* type;
-char msg[100];
+String msg, type;
 double vitesse,cap,longitude,latitude,tangage,gite,barre,ecoute;
 
 void setup() {
@@ -21,20 +22,21 @@ void loop() {
       id_sender = i;
       id_dest = 0;
       id_concern = i;
-      sprintf(msg,"__255&type:%s&id_sender:%i&id_dest:%i&id_concern:%i&255//",type,id_sender,id_dest,id_concern);
+      msg="__255&type:"+ type +"&id_sender:"+ id_sender +"&id_dest:"+ id_dest +"&id_concern:"+ id_concern +"&255//";
       Serial.println(msg);
     }
-    i++;
   }
   else{
     message();
   }
   delay(1000);
+  i++;
 }
 
 void message() {
+  msg="";
   //Make the random really random
-  randomSeed(analogRead(A0));
+  randomSeed(i);
   int key = random(1,999);
   int choice;
   id = random(-5,5);
@@ -45,59 +47,59 @@ void message() {
     if (id > 0) {
       //It is a boat
       type="B";
-      sprintf(msg,"__%i&type:%s&id_sender:%i&id_dest:%i&id_concern:%i&",key,type,id_sender,id_dest,id_concern);
+      msg=msg+"__"+ key +"&type:"+ type +"&id_sender:"+ id_sender +"&id_dest:"+ id_dest +"&id_concern:"+ id_concern +"&";
       choice = random(1,8);
       switch (choice) {
         case 1 :
           vitesse = randomDouble(0.0,100.0);
-          sprintf(msg,"%svitesse:%d&",msg,vitesse);
+          msg = msg + "vitesse:" + vitesse + "&";
           break;
         case 2 :
           cap = randomDouble(0.0,100.0);
-          sprintf(msg,"%scap:%d&",msg,cap);
+          msg = msg + "cap:" + cap + "&";
           break;
         case 3 :
           longitude = randomDouble(0.0,100.0);
-          sprintf(msg,"%slongitude:%d&",msg,longitude);
+          msg = msg + "longitude:" + longitude + "&";
           latitude = randomDouble(0.0,100.0);
-          sprintf(msg,"%slatitude:%d&",msg,latitude);
+          msg = msg + "latitude:" + latitude + "&";
           break;
         case 4 :
           tangage = randomDouble(0.0,100.0);
-          sprintf(msg,"%stangage:%d&",msg,tangage);
+          msg = msg + "tangage:" + tangage + "&";
           break;
         case 5 :
           gite = randomDouble(0.0,100.0);
-          sprintf(msg,"%sgite:%d&",msg,gite);
+          msg = msg + "gite:" + gite + "&";
           break;
         case 6 :
           barre = randomDouble(0.0,100.0);
-          sprintf(msg,"%sbarre:%d&",msg,barre);
+          msg = msg + "barre:" + barre + "&";
           break;
         case 7 :
           ecoute = randomDouble(0.0,100.0);
-          sprintf(msg,"%secoute:%d&",msg,ecoute);
+          msg = msg + "ecoute:" + ecoute + "&";
           break;
-
+ 
       }
     }
     else if (id < 0) {
       //It is a weather station
       type="M";
-      sprintf(msg,"__%i&type:%s&id_sender:%i&id_dest:%i&id_concern:%i&",key,type,id_sender,id_dest,id_concern);
+      msg=msg+"__"+ key +"&type:"+ type +"&id_sender:"+ id_sender +"&id_dest:"+ id_dest +"&id_concern:"+ id_concern +"&";
       choice = random(1,3);
       switch (choice) {
         case 1 :
           vitesse = randomDouble(0.0,100.0);
-          sprintf(msg,"%svitesse:%d&",msg,vitesse);
+          msg = msg + "%svitesse:" + vitesse + "&";
           break;
         case 2 :
           cap = randomDouble(0.0,100.0);
-          sprintf(msg,"%scap:%d&",msg,cap);
+          msg=msg+"cap:"+ cap +"&";
           break;
       }
     }
-    sprintf(msg,"%s%i//",msg,key);
+    msg=msg+key+"//";
     Serial.println(msg);
   }
   //Do nothing, it is the id of the serveur(0)
