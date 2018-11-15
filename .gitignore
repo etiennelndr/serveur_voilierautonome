@@ -52,3 +52,6 @@
 *.user
 *.Debug
 *.Release
+build-release/voilierautonome
+build-debug/voilierautonome
+build-release/voilier_autonome
