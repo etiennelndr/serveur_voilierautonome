@@ -1,36 +1,51 @@
 #include <math.h> 
 
-int i,id,id_sender, id_dest, id_concern;
+int received_byte,i,id,id_sender, id_dest, id_concern;
 String msg, type;
 double vitesse,cap,longitude,latitude,tangage,gite,barre,ecoute;
+bool start;
 
 void setup() {
   // put your setup code here, to run once:
-  id=-5;
+  i=-5;
+  start=false;
   Serial.begin(9600);
 }
 
 void loop() {
-  if(i<=5){
-    if (i != 0) {
-      if (i < 0) {
-        type = "MC";
+  if (Serial.available() > 0) {
+    // read the incoming byte:
+    received_byte = Serial.read();
+  }
+  if (Serial.available() > 0 && start==false) {
+    start=true;
+  }
+  if (received_byte==50) {
+    i=-5;
+  }
+  if(start==true){
+    if(i<=5){
+      if (i != 0) {
+        int key = random(1,999);
+        if (i < 0) {
+          type = "MC";
+        }
+        else if (i > 0) {
+          type = "BC";
+        }
+        id_sender = i;
+        id_dest = 0;
+        id_concern = i;
+        msg=String("__")+ key +"&type:"+ type +"&id_sender:"+ id_sender +"&id_dest:"+ id_dest +"&id_concern:"+ id_concern +"&"+ key +"//";
+        Serial.println(msg);
       }
-      else if (i > 0) {
-        type = "BC";
-      }
-      id_sender = i;
-      id_dest = 0;
-      id_concern = i;
-      msg="__255&type:"+ type +"&id_sender:"+ id_sender +"&id_dest:"+ id_dest +"&id_concern:"+ id_concern +"&255//";
-      Serial.println(msg);
     }
+    else{
+      message();
+    }
+    delay(1000);
+    i++;
   }
-  else{
-    message();
-  }
-  delay(1000);
-  i++;
 }
 
 void message() {
