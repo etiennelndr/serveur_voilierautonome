@@ -13,25 +13,25 @@ void setup() {
 }
 
 void loop() {
-  if (Serial.available() > 0) {
-    // read the incoming byte:
-    received_byte = Serial.read();
-
-    // say what you got:
-    Serial.print("I received: ");
-    Serial.println(received_byte);
-  }
+//  if (Serial.available() > 0) {
+//    // read the incoming byte:
+//    received_byte = Serial.read();
+//
+//    // say what you got:
+//    Serial.print("I received: ");
+//    Serial.println(received_byte);
+//  }
   //Read the received data
   if (Serial.available() > 0) {
     // read the incoming byte:
     received_byte = Serial.read();
+    if (received_byte==114) { //receive only "r" --> Restart
+      i=-5;
+    }
   }
   //Start the simulation when something is received
   if (Serial.available() > 0 && start==false) {
     start=true;
-  }
-  if (received_byte==114) { //receive only "r" --> Restart
-    i=-5;
   }
   if(start==true){
     if(i<=5){

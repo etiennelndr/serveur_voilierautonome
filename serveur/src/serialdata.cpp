@@ -2,6 +2,8 @@
 
 #include "utils.h"
 
+using std::cout;
+
 /**
  * CONSTRUCTOR
  *
@@ -14,7 +16,7 @@ SerialData::SerialData(QString port, QObject *parent) : QObject(parent) {
     connect(mPort, SIGNAL(readyRead()), this, SLOT(readData()));
 
     mPort->setPortName(port);
-    mPort->setBaudRate(QSerialPort::Baud115200);
+    mPort->setBaudRate(QSerialPort::Baud9600);
     mPort->setDataBits(QSerialPort::Data8);
     mPort->setParity(QSerialPort::NoParity);
     mPort->setStopBits(QSerialPort::OneStop);
@@ -71,6 +73,7 @@ void SerialData::start_simulator() {
 void SerialData::readData() {
     QString datas = QString(mPort->readAll().data());
     qDebug() << "Serial data IN : " << datas;
+    cout << "Serial data IN : " << datas.toStdString() << endl;
 
     // Split datas because we can receive multiple messages in a single row
     vector<string> messages = split(datas.toStdString(), "//");

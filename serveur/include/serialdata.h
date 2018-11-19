@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QtSerialPort/QSerialPort>
 #include <QDebug>
+#include <stdio.h>
 #include "message.h"
 
 /**
