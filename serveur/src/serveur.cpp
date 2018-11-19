@@ -19,7 +19,7 @@ ServeurTcp::ServeurTcp(quint16 port) {
     }
 
     // Create the UART
-    uart = new SerialData(QString("COM1"), nullptr);
+    uart = new SerialData(QString("COM5"), nullptr);
     // Connect it -> when receivedDataFromUART signal is emitted, call readDataFromUART slot
     connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
 
@@ -69,6 +69,10 @@ void ServeurTcp::sendToAllComputers(Message message) {
         out << quint16((paquet.size() - int(sizeof(quint16)))); // On écrase le 0 qu'on avait réservé par la longueur du message
         clients[i]->write(paquet);
     }
+}
+
+void ServeurTcp::start_uart(){
+    uart->start_simulator();
 }
 
 /**

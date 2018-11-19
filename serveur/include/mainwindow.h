@@ -40,6 +40,7 @@ class MainWindow : public QMainWindow {
         void state();
         void send();
         void msg_processing(QString msg);
+        void start_uart();
 };
 
 /**

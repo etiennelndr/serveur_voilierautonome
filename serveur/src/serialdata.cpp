@@ -54,6 +54,10 @@ void SerialData::sendData(Message msg) {
     mPort->write(data.toStdString().c_str(), data.length());
 }
 
+void SerialData::start_simulator() {
+    mPort->write("r");
+}
+
 /*--------------------------*
  *                          *
  *          SLOTS           *

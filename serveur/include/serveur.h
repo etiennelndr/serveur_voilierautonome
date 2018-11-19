@@ -32,6 +32,7 @@ class ServeurTcp : public QTcpServer {
         void sendToAllBoatsExcept(Message, int);
         boolean checkConnectionUART(Message);
         boolean checkConnectionTCPIP(Message, QTcpSocket*);
+        void start_uart();
 
     public slots:
 		void demandeConnexion();

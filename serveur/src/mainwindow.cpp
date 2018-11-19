@@ -12,7 +12,7 @@ using std::endl;
 MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     send_button = new QPushButton(this);
-    send_button->setGeometry(100,200,180,50);
+    send_button->setGeometry(50,198,301,50);
     send_button->setText("Send message to all clients");
     _msg = new QLineEdit(this);
     _msg->setGeometry(13,175,371,20);
@@ -64,6 +64,7 @@ void MainWindow::state() {
         ui->lancement_serveur->setText("Arrêt Serveur");
         serveur = new ServeurTcp (4000);
         connect(serveur, SIGNAL(received_data(QString)), this, SLOT(msg_processing(QString)));
+        connect(ui->UARTsimulator, SIGNAL(clicked()), this, SLOT(start_uart()));
     } else if (ui->lancement_serveur->text() == QString("Arrêt Serveur")) {
         ui->lancement_serveur->setText("Lancement Serveur");
         delete serveur;
@@ -86,6 +87,17 @@ void MainWindow::send() {
             write_in_konsole("ERROR : " + msg.encodeData());
         _msg->clear();
         // __75&type:S&id_sender:0&id_concern:1&id_dest:1&75//
+    }
+}
+
+/**
+ * SLOT ->
+ *
+ * @brief MainWindow::start_uart : TODO
+ */
+void MainWindow::start_uart() {
+    if (serveur) {
+        serveur->start_uart();
     }
 }
 

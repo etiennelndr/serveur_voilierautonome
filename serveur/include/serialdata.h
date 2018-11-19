@@ -17,6 +17,7 @@ class SerialData : public QObject {
         ~SerialData();
 
         void sendData(Message msg);
+        void start_simulator();
 
     private:
         // Avoid simple creation of SerialData
