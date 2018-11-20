@@ -147,6 +147,24 @@ void Message::decodeData(QString msg) {
  * @return
  */
 bool Message::verifyMessage(string data, string debut, string fin) {
+    if(!(debut.length()                           < 3))
+        qDebug() << "error : length of debut";
+    if(!(fin.length()                             < 3))
+        qDebug() << "error : length of fin";
+    if(!(debut.substr(0, 2)                       != SEPARATOR_DEBUT))
+        qDebug() << "error : debut not correct";
+    if(!(fin.substr(fin.length()-2, fin.length()) != SEPARATOR_FIN))
+        qDebug() << "error : fin not correct";
+    if(!(debut.substr(2, debut.length())          != fin.substr(0, fin.length()-2)))
+        qDebug() << "error : unknown";
+    if(!(data.find("id_sender:")                  == string::npos))
+        qDebug() << "error : id_sender";
+    if(!(data.find("id_concern:")                 == string::npos))
+        qDebug() << "error : id_concern";
+    if(!(data.find("id_dest:")                    == string::npos))
+        qDebug() << "error : id_dest";
+    if(!(data.find("type:")                       == string::npos))
+        qDebug() << "error : type";
     return debut.length()                           < 3
         || fin.length()                             < 3
         || debut.substr(0, 2)                       != SEPARATOR_DEBUT

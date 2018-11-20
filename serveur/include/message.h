@@ -9,6 +9,7 @@
 #include <sstream>
 #include <QtGlobal>
 #include <QTime>
+#include <QDebug>
 
 using std::string;
 using std::vector;
