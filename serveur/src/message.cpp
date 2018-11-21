@@ -154,7 +154,7 @@ void Message::decodeData(QString msg) {
  * @return
  */
 bool Message::verifyMessage(string data, string debut, string fin) {
-    std::cout << "-----------------" << data << "---------------" << debut << "------------" << fin << std::endl;
+    std::cout << data << " / " << debut << " / " << fin << std::endl;
     if(debut.length()                           > 6){
         qDebug() << "error : length of debut";
         qDebug() << debut.length();
