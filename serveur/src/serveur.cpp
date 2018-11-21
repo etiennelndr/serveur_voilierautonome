@@ -1,5 +1,7 @@
 #include "serveur.h"
 
+#include "utils.h"
+
 using std::cout;
 using std::endl;
 
@@ -24,7 +26,7 @@ ServeurTcp::ServeurTcp(quint16 port) {
     connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
 
     // Connect to the database
-    db = new Database(QString("C:\\Users\\Etienne\\Documents\\GitHub\\serveur_voilierautonome\\serveur\\voilierautonome.db"));
+    db = new Database(QString::fromStdString(exePath() + "\\..\\..\\serveur\\voilierautonome.db"));
     QSqlError err = db->resetDatabase();
     if (err.type() != QSqlError::NoError)
         cout << "Erreur: " << err.text().toStdString() << endl;
@@ -264,7 +266,12 @@ boolean ServeurTcp::checkConnectionTCPIP(Message data, QTcpSocket* socket) {
  * @param msg
  */
 void ServeurTcp::treatBoatDatas(Message msg) {
-    (void)msg;
+    // Insert datas in the database
+    QSqlError err = db->insertInDatabase(msg);
+    if (err.type() != QSqlError::NoError)
+        cout << "Erreur: " << err.text().toStdString() << endl;
+
+    // TODO
 }
 
 /**
@@ -317,8 +324,6 @@ bool ServeurTcp::getComputerWithIndexOfSocket(Computer &c, int indexOfSocket) {
     }
     return false;
 }
-
-
 
 /**
  * METHOD

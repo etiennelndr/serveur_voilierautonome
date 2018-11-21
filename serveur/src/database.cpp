@@ -21,15 +21,12 @@ const QString Database::ECOUTE    = "ecoute";
  *
  * @brief Database::Database
  */
-Database::Database(QString dbName) :
-    dbName(dbName) {
-    qDebug()<<QSqlDatabase::drivers();
+Database::Database(QString dbName) : dbName(dbName) {
     // Create the database using SQLite SGBDR
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
     db.setDatabaseName(this->dbName);
     // Open the  database and emit its returned value
     state = db.open();
-    std::cout << db.lastError().text().toStdString() << std::endl;
     emit isConnected(state);
 }
 
@@ -89,8 +86,6 @@ QSqlError Database::insertInDatabase(Message msg) {
     // Bind values
     bindValues(query, msg.copy());
 
-    std::cout << query.executedQuery().toStdString() << std::endl;
-
     // Execute the query
     if (query.exec())
         db.commit(); // Commit changes
@@ -101,6 +96,13 @@ QSqlError Database::insertInDatabase(Message msg) {
     return query.lastError();
 }
 
+/**
+ * METHOD
+ *
+ * @brief Database::bindValues : TODO
+ * @param query
+ * @param msg
+ */
 void Database::bindValues(QSqlQuery &query, Message msg) {
     if (msg.getType()) {
         query.bindValue(":"+TYPE, QString::fromStdString(*msg.getType()));
@@ -220,6 +222,6 @@ void Database::addNewValueAndColumnName(QString& columnsName, QString columnName
         isFirst = false;
     } else {
         columnsName.append(", " + columnName);
-        values.append(", "+columnName);
+        values.append(", :"+columnName);
     }
 }
