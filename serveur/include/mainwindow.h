@@ -31,14 +31,12 @@ class MainWindow : public QMainWindow {
     private:
         Ui::MainWindow* ui;
     //    QPlainTextEdit *_konsole;
-        QPushButton *send_button;
         QLineEdit *_msg;
 
         ServeurTcp* serveur=nullptr;
 
     public slots:
         void state();
-        void send();
         void msg_processing(QString msg);
         void start_uart();
 };

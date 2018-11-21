@@ -38,6 +38,8 @@ Database::Database(QString dbName) : dbName(dbName) {
 Database::~Database() {
     // Close the database
     db.close();
+    // Remove the database to avoid "duplicate connection name" warning
+    QSqlDatabase::removeDatabase("QSQLITE");
 }
 
 /*--------------------------*

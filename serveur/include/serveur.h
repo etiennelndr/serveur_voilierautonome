@@ -25,13 +25,6 @@ class ServeurTcp : public QTcpServer {
     public:
         ServeurTcp(quint16 port);
         ~ServeurTcp();
-        void sendToAllExceptWeatherStation(Message);
-        void sendToAllComputersExcept(Message, int);
-        void sendToAllComputers(Message);
-        void sendToComputer(Message, int);
-        void sendToAllBoatsExcept(Message, int);
-        boolean checkConnectionUART(Message);
-        boolean checkConnectionTCPIP(Message, QTcpSocket*);
         void start_uart();
 
     public slots:
@@ -74,6 +67,14 @@ class ServeurTcp : public QTcpServer {
         bool isComputerConnected(int);
         bool getComputerWithId(Computer&, int);
         bool getComputerWithIndexOfSocket(Computer&, int);
+
+        void sendToAllExceptWeatherStation(Message);
+        void sendToAllComputersExcept(Message, int);
+        void sendToAllComputers(Message);
+        void sendToComputer(Message, int);
+        void sendToAllBoatsExcept(Message, int);
+        boolean checkConnectionUART(Message);
+        boolean checkConnectionTCPIP(Message, QTcpSocket*);
 
         // Database to store each message
         Database* db;

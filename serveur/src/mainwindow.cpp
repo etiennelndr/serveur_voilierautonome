@@ -11,14 +11,8 @@ using std::endl;
  */
 MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    send_button = new QPushButton(this);
-    send_button->setGeometry(50,198,301,50);
-    send_button->setText("Send message to all clients");
-    _msg = new QLineEdit(this);
-    _msg->setGeometry(13,175,371,20);
 
     connect(ui->lancement_serveur, SIGNAL(clicked()), this, SLOT(state()));
-    connect(send_button, SIGNAL(clicked()), this, SLOT(send()));
 }
 
 /**
@@ -30,7 +24,6 @@ MainWindow::~MainWindow() {
     delete ui;
     delete serveur;
     delete _msg;
-    delete send_button;
 }
 
 /*--------------------------*
@@ -69,24 +62,6 @@ void MainWindow::state() {
         ui->lancement_serveur->setText("Lancement Serveur");
         delete serveur;
         serveur = nullptr;
-    }
-}
-
-/**
- * SLOT ->
- *
- * @brief MainWindow::send : TODO
- */
-void MainWindow::send() {
-    if (serveur) {
-        Message msg;
-        msg.decodeData(get_msg());
-        if (!msg.getError())
-            serveur->sendToAllComputers(msg);
-        else
-            write_in_konsole("ERROR : " + msg.encodeData());
-        _msg->clear();
-        // __75&type:S&id_sender:0&id_concern:1&id_dest:1&75//
     }
 }
 
