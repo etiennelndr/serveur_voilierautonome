@@ -231,13 +231,13 @@ boolean ServeurTcp::checkConnectionUART(Message msg) {
 
     if (*msg.getType() == "MC") {
         // Connection d'une station météo
-        addNewWeatherStation(msg.copy());
+        emit received_data("Nouvelle station meteo : "+ QString::number(*msg.getIdConcern()));
+        addNewWeatherStation(msg);
     } else if (*msg.getType() == "BC") {
         // Connection d'un bateau
-        addNewBoat(msg.copy());
+        emit received_data("Nouveau bateau : "+ QString::number(*msg.getIdConcern()));
+        addNewBoat(msg);
     }
-
-    emit received_data(msg.encodeData());
 
     return true;
 }
@@ -256,7 +256,7 @@ boolean ServeurTcp::checkConnectionTCPIP(Message data, QTcpSocket* socket) {
     int index = clients.indexOf(socket);
     addNewComputer(data.copy(), index);
 
-    cout << "Nouveau client:" << *data.getIdSender() << endl;
+    cout << "Nouveau client :" << *data.getIdSender() << endl;
 
     return true;
 }
