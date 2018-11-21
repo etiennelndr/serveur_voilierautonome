@@ -119,22 +119,29 @@ QString Message::encodeData() {
 void Message::decodeData(QString msg) {
     // Concert from QString to string
     string data = msg.toStdString();
+    if (data.length()>4){//Analyse it only if it is not an empty message
 
-    // Split the data (for each '&' character we split the data)
-    vector<string> splitData = split(data, "&");
+        // Split the data (for each '&' character we split the data)
+        vector<string> splitData = split(data, "&");
 
-    // If we don't have correct symbols at the beginning and the end
-    // of the data we MUST return an error
-    // Also the message MUST contain an id_sender, an id_concern, an
-    // id_dest and a type
-    if (verifyMessage(data, splitData[0], splitData[splitData.size()-1])) {
+        // If we don't have correct symbols at the beginning and the end
+        // of the data we MUST return an error
+        // Also the message MUST contain an id_sender, an id_concern, an
+        // id_dest and a type
+        if (verifyMessage(data, splitData[0], splitData[splitData.size()-1])) {
+            std::cout << "THERE IS AN ERROR" << std::endl;
+            error = true;
+            return;
+        }
+
+        // Then assign each value to its attribute
+        for (unsigned int i=1; i < splitData.size()-1; i++) {
+            assignValueToCorrectAttribute(splitData[i]);
+        }
+    }
+    else {
         error = true;
         return;
-    }
-
-    // Then assign each value to its attribute
-    for (unsigned int i=1; i < splitData.size()-1; i++) {
-        assignValueToCorrectAttribute(splitData[i]);
     }
 }
 
@@ -147,26 +154,35 @@ void Message::decodeData(QString msg) {
  * @return
  */
 bool Message::verifyMessage(string data, string debut, string fin) {
-    if(!(debut.length()                           < 3))
+    std::cout << "-----------------" << data << "---------------" << debut << "------------" << fin << std::endl;
+    if(debut.length()                           > 6){
         qDebug() << "error : length of debut";
-    if(!(fin.length()                             < 3))
+        qDebug() << debut.length();
+    }
+    if(fin.length()                             > 6){
         qDebug() << "error : length of fin";
-    if(!(debut.substr(0, 2)                       != SEPARATOR_DEBUT))
+        qDebug() << fin.length();
+    }
+    if(debut.substr(0, 2)                       != SEPARATOR_DEBUT){
         qDebug() << "error : debut not correct";
-    if(!(fin.substr(fin.length()-2, fin.length()) != SEPARATOR_FIN))
+        std::cout << "       " << debut.substr(0,2) << "!=" << SEPARATOR_DEBUT << "       "  << std::endl;
+    }
+    if(fin.substr(fin.length()-2, fin.length()) != SEPARATOR_FIN){
         qDebug() << "error : fin not correct";
-    if(!(debut.substr(2, debut.length())          != fin.substr(0, fin.length()-2)))
+        std::cout << fin.substr(fin.length()-2, fin.length()) << "!=" << SEPARATOR_FIN << std::endl;
+    }
+    if(debut.substr(2, debut.length())          != fin.substr(0, fin.length()-2))
         qDebug() << "error : unknown";
-    if(!(data.find("id_sender:")                  == string::npos))
+    if(data.find("id_sender:")                  == string::npos)
         qDebug() << "error : id_sender";
-    if(!(data.find("id_concern:")                 == string::npos))
+    if(data.find("id_concern:")                 == string::npos)
         qDebug() << "error : id_concern";
-    if(!(data.find("id_dest:")                    == string::npos))
+    if(data.find("id_dest:")                    == string::npos)
         qDebug() << "error : id_dest";
-    if(!(data.find("type:")                       == string::npos))
+    if(data.find("type:")                       == string::npos)
         qDebug() << "error : type";
-    return debut.length()                           < 3
-        || fin.length()                             < 3
+    return debut.length()                           > 6
+        || fin.length()                             > 6
         || debut.substr(0, 2)                       != SEPARATOR_DEBUT
         || fin.substr(fin.length()-2, fin.length()) != SEPARATOR_FIN
         || debut.substr(2, debut.length())          != fin.substr(0, fin.length()-2)

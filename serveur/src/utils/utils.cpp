@@ -15,5 +15,6 @@ vector<string> split(string data, string delimiter) {
         tokens.push_back(data.substr(0, pos));
         data.erase(0, pos + delimiter.length());
     }
+    tokens.push_back(data);
     return tokens;
 }
