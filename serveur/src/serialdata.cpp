@@ -15,7 +15,7 @@ SerialData::SerialData(QString port, QObject *parent) : QObject(parent) {
     mPort = new QSerialPort(this);
     connect(mPort, SIGNAL(readyRead()), this, SLOT(readData()));
 
-    mPort->setPortName(port);
+    mPort->setPortName(QString(port));
     mPort->setBaudRate(QSerialPort::Baud9600);
     mPort->setDataBits(QSerialPort::Data8);
     mPort->setParity(QSerialPort::NoParity);
@@ -25,6 +25,11 @@ SerialData::SerialData(QString port, QObject *parent) : QObject(parent) {
     if(mPort->open(QIODevice::ReadWrite)){
         mPort->setTextModeEnabled(true);
         qDebug() << "Port open at " << mPort->portName();
+        mPort->clear();
+        start_simulator();
+    }
+    else {
+        qDebug() << "Failed to open port " << mPort->portName();
     }
 }
 
@@ -73,7 +78,6 @@ void SerialData::start_simulator() {
 void SerialData::readData() {
     QString datas = QString(mPort->readAll().data());
     qDebug() << "Serial data IN : " << datas;
-    cout << "Serial data IN : " << datas.toStdString() << endl;
 
     // Split datas because we can receive multiple messages in a single row
     vector<string> messages = split(datas.toStdString(), "//");
