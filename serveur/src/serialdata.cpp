@@ -22,13 +22,12 @@ SerialData::SerialData(QString port, QObject *parent) : QObject(parent) {
     mPort->setStopBits(QSerialPort::OneStop);
     mPort->setFlowControl(QSerialPort::NoFlowControl);
 
-    if(mPort->open(QIODevice::ReadWrite)){
+    if(mPort->open(QIODevice::ReadWrite)) {
         mPort->setTextModeEnabled(true);
         qDebug() << "Port open at " << mPort->portName();
         mPort->clear();
         start_simulator();
-    }
-    else {
+    } else {
         qDebug() << "Failed to open port " << mPort->portName();
     }
 }

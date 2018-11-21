@@ -21,7 +21,7 @@ ServeurTcp::ServeurTcp(quint16 port) {
     }
 
     // Create the UART
-    uart = new SerialData(QString("COM5"), nullptr);
+    uart = new SerialData(QString("COM4"), nullptr);
     // Connect it -> when receivedDataFromUART signal is emitted, call readDataFromUART slot
     connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
 
@@ -231,11 +231,13 @@ boolean ServeurTcp::checkConnectionUART(Message msg) {
 
     if (*msg.getType() == "MC") {
         // Connection d'une station météo
-        addNewWeatherStation(msg);
+        addNewWeatherStation(msg.copy());
     } else if (*msg.getType() == "BC") {
         // Connection d'un bateau
-        addNewBoat(msg);
+        addNewBoat(msg.copy());
     }
+
+    emit received_data(msg.encodeData());
 
     return true;
 }
@@ -423,9 +425,9 @@ void ServeurTcp::readDataFromTCPIP() {
     // Verify if an error occured during the decoding
     if (!data.getError()) {
         // Check if it's the first connection
-        if (!checkConnectionTCPIP(data, socket)) {
+        if (!checkConnectionTCPIP(data.copy(), socket)) {
             // If not we must send the datas to the boat
-            sendToBoat(data, *data.getIdSender());
+            sendToBoat(data.copy(), *data.getIdSender());
         }
     }
 
