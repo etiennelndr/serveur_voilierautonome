@@ -10,6 +10,7 @@ class Message;
  */
 class Boat {
     public:
+        Boat(int _id);
         Boat();
 
         //getters
@@ -40,8 +41,6 @@ class Boat {
         void set_gite(float _gite)          {gite=_gite;}
         void set_barre(float _barre)        {barre=_barre;}
         void set_ecoute(float _ecoute)        {ecoute=_ecoute;}
-
-        void init(Message m);
 
     private:
         float vitesse;

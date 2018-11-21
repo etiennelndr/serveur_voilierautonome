@@ -10,6 +10,7 @@ class Message;
  */
 class WeatherStation {
     public:
+        WeatherStation(int _id, float _longitude, float _latitude);
         WeatherStation();
 
         // Getters
@@ -27,8 +28,6 @@ class WeatherStation {
         void set_cap(float _cap);
         void set_longitude(float _longitude);
         void set_latitude(float _latitude);
-
-        void init(Message m);
 
     private:
         int   id;

@@ -7,29 +7,14 @@
  *
  * @brief WeatherStation::WeatherStation
  */
+WeatherStation::WeatherStation(int _id, float _longitude, float _latitude) {
+    this->id = _id;
+    this->longitude = _longitude;
+    this->latitude = _latitude;
+}
 WeatherStation::WeatherStation() {
-    // Nothing to do
+    this->id = -1;
+    this->longitude = -1.0f;
+    this->latitude = -1.0f;
 }
 
-/**
- * METHOD
- *
- * @brief WeatherStation::init : init parameters with a Message object
- * @param m
- */
-void WeatherStation::init(Message m) {
-    if (m.getIdSender())
-        this->id = *m.getIdSender();
-
-    if (m.getVitesse())
-        this->vitesse = *m.getVitesse();
-
-    if (m.getCap())
-        this->cap = *m.getCap();
-
-    if (m.getLongitude())
-        this->longitude = *m.getLongitude();
-
-    if (m.getLatitude())
-        this->latitude = *m.getLatitude();
-}
