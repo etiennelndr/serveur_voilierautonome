@@ -21,7 +21,7 @@ ServeurTcp::ServeurTcp(quint16 port) {
     }
 
     // Create the UART
-    uart = new SerialData(QString("COM4"), nullptr);
+    uart = new SerialData(QString("COM5"), nullptr);
     // Connect it -> when receivedDataFromUART signal is emitted, call readDataFromUART slot
     connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
 
@@ -231,11 +231,9 @@ boolean ServeurTcp::checkConnectionUART(Message msg) {
 
     if (*msg.getType() == "MC") {
         // Connection d'une station météo
-        emit received_data("Nouvelle station meteo : "+ QString::number(*msg.getIdConcern()));
         addNewWeatherStation(msg);
     } else if (*msg.getType() == "BC") {
         // Connection d'un bateau
-        emit received_data("Nouveau bateau : "+ QString::number(*msg.getIdConcern()));
         addNewBoat(msg);
     }
 
@@ -334,9 +332,7 @@ bool ServeurTcp::getComputerWithIndexOfSocket(Computer &c, int indexOfSocket) {
  * @param b
  */
 void ServeurTcp::addNewBoat(Message b) {
-    Boat boat;
-    // Init the boat
-    boat.init(b);
+    Boat boat(*b.getIdConcern());
     // Push it in the vector boats
     boats.push_back(boat);
 }
@@ -349,10 +345,9 @@ void ServeurTcp::addNewBoat(Message b) {
  * @param indexOfSocket
  */
 void ServeurTcp::addNewComputer(Message c, int indexOfSocket) {
-    Computer* computer= new Computer(*c.getIdConcern(), indexOfSocket);
+    Computer computer(*c.getIdConcern(), indexOfSocket);
     // Push it in the vector boats
-    computers.push_back(*computer);
-    delete computer;
+    computers.push_back(computer);
 }
 
 /**
@@ -362,9 +357,7 @@ void ServeurTcp::addNewComputer(Message c, int indexOfSocket) {
  * @param ws
  */
 void ServeurTcp::addNewWeatherStation(Message ws) {
-    WeatherStation weatherStation;
-    // Init the boat
-    weatherStation.init(ws);
+    WeatherStation weatherStation(*ws.getIdConcern(), *ws.getLongitude(), *ws.getLatitude());
     // Push it in the vector boats
     weatherStations.push_back(weatherStation);
 }
