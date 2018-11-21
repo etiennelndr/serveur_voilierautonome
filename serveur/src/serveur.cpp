@@ -101,9 +101,9 @@ void ServeurTcp::sendToAllExceptWeatherStation(Message message) {
         msg.setLongitude(message.getLongitude());
         msg.setIdConcern(message.getIdSender());
 
-        Computer c;
-        if (getComputerWithIndexOfSocket(c, i)) {
-            msg.setIdDest(new int(c.getId()));
+        Computer* c = new Computer();
+        if (getComputerWithIndexOfSocket(*c, i)) {
+            msg.setIdDest(new int(c->getId()));
 
             out << quint16(0);    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
             out << msg.encodeData();        // On ajoute le message à la suite
@@ -347,11 +347,10 @@ void ServeurTcp::addNewBoat(Message b) {
  * @param indexOfSocket
  */
 void ServeurTcp::addNewComputer(Message c, int indexOfSocket) {
-    Computer computer;
-    // Init the boat
-    computer.init(c, indexOfSocket);
+    Computer* computer= new Computer(*c.getIdConcern(), indexOfSocket);
     // Push it in the vector boats
-    computers.push_back(computer);
+    computers.push_back(*computer);
+    delete computer;
 }
 
 /**

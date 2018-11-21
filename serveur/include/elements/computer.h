@@ -11,13 +11,11 @@ class Message;
 class Computer {
     public:
         Computer();
-
+        Computer(int _id, int indexOfSocket);
         int  getId();
         void setId(int id);
         int  getIndexOfSocket();
         void setIndexOfSocket(int);
-
-        void init(Message, int);
 
     private:
         int id;

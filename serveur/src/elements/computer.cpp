@@ -7,20 +7,13 @@
  *
  * @brief Computer::Computer
  */
-Computer::Computer() {
-    // Nothing to do
-}
-
-/**
- * METHOD
- *
- * @brief Computer::init : init parameters with a Message object
- * @param m
- * @param indexOfSocket
- */
-void Computer::init(Message m, int indexOfSocket) {
-    if (m.getIdSender())
-        this->id = *m.getIdSender();
+Computer::Computer(int _id, int indexOfSocket) {
+    if (_id)
+        this->id = _id;
 
     this->indexOfSocket = indexOfSocket;
+}
+Computer::Computer() {
+    this->id = -1;
+    this->indexOfSocket = -1;
 }
