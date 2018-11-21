@@ -11,7 +11,6 @@ using std::endl;
  */
 MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-
     connect(ui->lancement_serveur, SIGNAL(clicked()), this, SLOT(state()));
 }
 
@@ -38,7 +37,7 @@ MainWindow::~MainWindow() {
  * @param log
  */
 void MainWindow::write_in_konsole(QString log) {
-    //ui->konsole->append(log);
+    ui->konsole->append(log);
     cout << log.toStdString() << endl;
 }
 
@@ -53,7 +52,7 @@ void MainWindow::write_in_konsole(QString log) {
  * @brief MainWindow::state
  */
 void MainWindow::state() {
-    if (ui->lancement_serveur->text() == QString("Lancement Serveur")) {
+    if (ui->lancement_serveur->text() == QString("Lancement Serveur") || ui->lancement_serveur->text() == QString("Lancement Serveur + Simulateur UART")) {
         ui->lancement_serveur->setText("Arrêt Serveur");
         serveur = new ServeurTcp (4000);
         connect(serveur, SIGNAL(received_data(QString)), this, SLOT(msg_processing(QString)));

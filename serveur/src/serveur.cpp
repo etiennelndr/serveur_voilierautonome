@@ -462,8 +462,9 @@ void ServeurTcp::deconnexionClient() {
  * @param msg
  */
 void ServeurTcp::readDataFromUART(Message msg) {
-    if (msg.getError())
+    if (msg.getError()){
         emit received_data(QString("Error when decoding the message from the UART."));
+    }
     else {
         emit received_data(msg.encodeData());
 

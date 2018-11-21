@@ -86,9 +86,11 @@ void SerialData::readData() {
         messages[i] += "//";
         // Decode data
         Message msg;
-        msg.decodeData(QString::fromStdString(messages[i]));
-        // Emit a signal to inform the server we received
-        // datas from the UART
-        emit receivedDataFromUART(msg);
+        if(QString::fromStdString(messages[i]).length()>4){
+            msg.decodeData(QString::fromStdString(messages[i]));
+            // Emit a signal to inform the server we received
+            // datas from the UART
+            emit receivedDataFromUART(msg);
+        }
     }
 }
