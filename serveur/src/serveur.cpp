@@ -252,7 +252,7 @@ boolean ServeurTcp::checkConnectionTCPIP(Message data, QTcpSocket* socket) {
         return false;
 
     int index = clients.indexOf(socket);
-    addNewComputer(data, index);
+    addNewComputer(data.copy(), index);
 
     cout << "Nouveau client:" << *data.getIdSender() << endl;
 
@@ -468,25 +468,25 @@ void ServeurTcp::readDataFromUART(Message msg) {
     else {
         emit received_data(msg.encodeData());
 
-        if (!msg.getError() && !checkConnectionUART(msg)) {
+        if (!msg.getError() && !checkConnectionUART(msg.copy())) {
             // Transmit datas to computer
             if (*msg.getIdSender() > 0) {
                 // This message comes from a boat
                 // First of all, treat the datas
-                treatBoatDatas(msg);
+                treatBoatDatas(msg.copy());
 
                 Computer c;
                 if (getComputerWithId(c, *msg.getIdConcern())) {
                     // Send all datas to the computer which is linked to the boat
-                    sendToComputer(msg, *msg.getIdConcern());
+                    sendToComputer(msg.copy(), *msg.getIdConcern());
                     // Send longitude and latitude to other boats
-                    sendToAllBoatsExcept(msg, *msg.getIdConcern());
+                    sendToAllBoatsExcept(msg.copy(), *msg.getIdConcern());
                     // Send longitude and latitude to other computers
-                    sendToAllComputersExcept(msg, c.getIndexOfSocket());
+                    sendToAllComputersExcept(msg.copy(), c.getIndexOfSocket());
                 }
             } else if (*msg.getIdSender() < 0) {
                 // This message comes from a weather station
-                sendToAllExceptWeatherStation(msg);
+                sendToAllExceptWeatherStation(msg.copy());
             }
         }
     }
