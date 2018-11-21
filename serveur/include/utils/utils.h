@@ -11,5 +11,7 @@ using std::string;
 
 vector<string> split(string, string);
 
+string exePath();
+
 
 #endif // UTILS_H

@@ -24,7 +24,7 @@ ServeurTcp::ServeurTcp(quint16 port) {
     connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
 
     // Connect to the database
-    db = new Database(QString("127.0.0.1"), QString("voilierautonome"), QString("user_voilierautonome"), QString("1234abcd"));
+    db = new Database(QString("C:\\Users\\Etienne\\Documents\\GitHub\\serveur_voilierautonome\\serveur\\voilierautonome.db"));
     QSqlError err = db->resetDatabase();
     if (err.type() != QSqlError::NoError)
         cout << "Erreur: " << err.text().toStdString() << endl;

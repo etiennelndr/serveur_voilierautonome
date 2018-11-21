@@ -55,6 +55,8 @@ class Message {
 
         bool getError();
 
+        Message copy();
+
     private:
         // Type (B, M ou S)
         string* type=nullptr;

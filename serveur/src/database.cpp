@@ -14,25 +14,18 @@ const QString Database::TANGAGE   = "tangage";
 const QString Database::BARRE     = "barre";
 const QString Database::ECOUTE    = "ecoute";
 
+#include <iostream>
+
 /**
  * CONSTRUCTOR
  *
  * @brief Database::Database
  */
-Database::Database(QString hostName, QString dbName, QString userName, QString password) :
-    hostName(hostName),
-    dbName(dbName),
-    userName(userName),
-    password(password) {
+Database::Database(QString dbName) :
+    dbName(dbName) {
     qDebug()<<QSqlDatabase::drivers();
-    // Create the database using MySQL SGBDR
-    // Set the host name
-    // Set the database name
+    // Create the database using SQLite SGBDR
     QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE");
-    db.setHostName(this->hostName); // Ton host
-    db.setUserName(this->userName); // Ton login
-    db.setPassword(this->password); // Ton mot de passe
-    //db.setDatabaseName("Driver={SQL Server};Server=(localhost);"); // Le nom de ta database
     db.setDatabaseName(this->dbName);
     // Open the  database and emit its returned value
     state = db.open();
@@ -90,20 +83,61 @@ QSqlError Database::insertInDatabase(Message msg) {
 
     // Insert in database
     QSqlQuery query(db);
-    // Create two QString for the query
-    QString columnsName;
-    QString values;
     // Transform the message to begin the creation of the query
-    transformMessageToQuery(query, msg, columnsName, values);
+    transformMessageToQuery(query, msg.copy());
+
+    // Bind values
+    bindValues(query, msg.copy());
+
+    std::cout << query.executedQuery().toStdString() << std::endl;
 
     // Execute the query
-    if (query.exec("INSERT INTO " + ELEMENTS + columnsName + values))
+    if (query.exec())
         db.commit(); // Commit changes
     else
         db.rollback(); // Else rollback changes
 
     // Return the error (could be empty)
     return query.lastError();
+}
+
+void Database::bindValues(QSqlQuery &query, Message msg) {
+    if (msg.getType()) {
+        query.bindValue(":"+TYPE, QString::fromStdString(*msg.getType()));
+    }
+    if (msg.getIdSender()) {
+        query.bindValue(":"+IDSENDER, *msg.getIdSender());
+    }
+    if (msg.getIdDest()) {
+        query.bindValue(":"+IDDEST, *msg.getIdDest());
+    }
+    if (msg.getIdConcern()) {
+        query.bindValue(":"+IDCONCERN, *msg.getIdConcern());
+    }
+    if (msg.getLongitude()) {
+        query.bindValue(":"+LONGITUDE, *msg.getLongitude());
+    }
+    if (msg.getLatitude()) {
+        query.bindValue(":"+LATITUDE, *msg.getLatitude());
+    }
+    if (msg.getCap()) {
+        query.bindValue(":"+CAP, *msg.getCap());
+    }
+    if (msg.getVitesse()) {
+        query.bindValue(":"+VITESSE, *msg.getVitesse());
+    }
+    if (msg.getGite()) {
+        query.bindValue(":"+GITE, *msg.getGite());
+    }
+    if (msg.getTangage()) {
+        query.bindValue(":"+TANGAGE, *msg.getTangage());
+    }
+    if (msg.getBarre()) {
+        query.bindValue(":"+BARRE, *msg.getBarre());
+    }
+    if (msg.getEcoute()) {
+        query.bindValue(":"+ECOUTE, *msg.getEcoute());
+    }
 }
 
 /**
@@ -115,7 +149,11 @@ QSqlError Database::insertInDatabase(Message msg) {
  * @param columnsName
  * @param values
  */
-void Database::transformMessageToQuery(QSqlQuery& query, Message msg, QString& columnsName, QString& values) {
+void Database::transformMessageToQuery(QSqlQuery& query, Message msg) {
+    // Create two QString for the query
+    QString columnsName;
+    QString values;
+
     // Open each one with an open parenthesis
     columnsName.append("(");
     values.append("VALUES (");
@@ -124,56 +162,47 @@ void Database::transformMessageToQuery(QSqlQuery& query, Message msg, QString& c
 
     if (msg.getType()) {
         addNewValueAndColumnName(columnsName, TYPE, values, isFirst);
-        query.addBindValue(QString::fromStdString(*msg.getType()));
     }
     if (msg.getIdSender()) {
         addNewValueAndColumnName(columnsName, IDSENDER, values, isFirst);
-        query.addBindValue(*msg.getIdSender());
     }
     if (msg.getIdDest()) {
         addNewValueAndColumnName(columnsName, IDDEST, values, isFirst);
-        query.addBindValue(*msg.getIdDest());
     }
     if (msg.getIdConcern()) {
         addNewValueAndColumnName(columnsName, IDCONCERN, values, isFirst);
-        query.addBindValue(*msg.getIdConcern());
     }
     if (msg.getLongitude()) {
         addNewValueAndColumnName(columnsName, LONGITUDE, values, isFirst);
-        query.addBindValue(*msg.getLongitude());
     }
     if (msg.getLatitude()) {
         addNewValueAndColumnName(columnsName, LATITUDE, values, isFirst);
-        query.addBindValue(*msg.getLatitude());
     }
     if (msg.getCap()) {
         addNewValueAndColumnName(columnsName, CAP, values, isFirst);
-        query.addBindValue(*msg.getCap());
     }
     if (msg.getVitesse()) {
         addNewValueAndColumnName(columnsName, VITESSE, values, isFirst);
-        query.addBindValue(*msg.getVitesse());
     }
     if (msg.getGite()) {
         addNewValueAndColumnName(columnsName, GITE, values, isFirst);
-        query.addBindValue(*msg.getGite());
     }
     if (msg.getTangage()) {
         addNewValueAndColumnName(columnsName, TANGAGE, values, isFirst);
-        query.addBindValue(*msg.getTangage());
     }
     if (msg.getBarre()) {
         addNewValueAndColumnName(columnsName, BARRE, values, isFirst);
-        query.addBindValue(*msg.getBarre());
     }
     if (msg.getEcoute()) {
         addNewValueAndColumnName(columnsName, ECOUTE, values, isFirst);
-        query.addBindValue(*msg.getEcoute());
     }
 
     // Close each one with a close parenthesis
     columnsName.append(")");
     values.append(")");
+
+    // Prepare the query
+    query.prepare("INSERT INTO " + ELEMENTS + " " + columnsName + " " + values);
 }
 
 /**
@@ -187,10 +216,10 @@ void Database::transformMessageToQuery(QSqlQuery& query, Message msg, QString& c
 void Database::addNewValueAndColumnName(QString& columnsName, QString columnName, QString& values, bool& isFirst) {
     if (isFirst) {
         columnsName.append(columnName);
-        values.append("?");
+        values.append(":"+columnName);
         isFirst = false;
     } else {
         columnsName.append(", " + columnName);
-        values.append(", ?");
+        values.append(", "+columnName);
     }
 }

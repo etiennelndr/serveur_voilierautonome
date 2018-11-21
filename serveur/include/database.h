@@ -18,7 +18,7 @@ using namespace std;
 class Database : public QObject {
     Q_OBJECT
     public:
-        Database(QString hostName, QString dbName, QString userName, QString password);
+        Database(QString dbName);
         ~Database();
 
         // Reset the database
@@ -30,14 +30,8 @@ class Database : public QObject {
     private:
         // Qt Database
         QSqlDatabase db;
-        // Host name
-        QString hostName;
         // Database name
         QString dbName;
-        // User name
-        QString userName;
-        // Password
-        QString password;
 
         // State
         bool state;
@@ -62,8 +56,9 @@ class Database : public QObject {
         static const QString ECOUTE;
 
         // Transform a message to a query
-        void transformMessageToQuery(QSqlQuery &query, Message msg, QString &columnsName, QString &values);
+        void transformMessageToQuery(QSqlQuery &query, Message msg);
         void addNewValueAndColumnName(QString &columnsName, QString columnName, QString& values, bool &isFirst);
+        void bindValues(QSqlQuery &query, Message msg);
 
     signals:
         void isConnected(bool);

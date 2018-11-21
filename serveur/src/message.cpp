@@ -21,18 +21,30 @@ Message::Message() {
  * @brief Message::~Message : Destructor for Message class
  */
 Message::~Message() {
-    delete type;
-    delete id_sender;
-    delete id_dest;
-    delete id_concern;
-    delete longitude;
-    delete latitude;
-    delete cap;
-    delete vitesse;
-    delete gite;
-    delete tangage;
-    delete barre;
-    delete ecoute;
+    if (type)
+        delete type;
+    if (id_sender)
+        delete id_sender;
+    if (id_dest)
+        delete id_dest;
+    if (id_concern)
+        delete id_concern;
+    if (longitude)
+        delete longitude;
+    if (latitude)
+        delete latitude;
+    if (cap)
+        delete cap;
+    if (vitesse)
+        delete vitesse;
+    if (gite)
+        delete gite;
+    if (tangage)
+        delete tangage;
+    if (barre)
+        delete barre;
+    if (ecoute)
+        delete ecoute;
 }
 
 /*--------------------------*
@@ -147,8 +159,8 @@ void Message::decodeData(QString msg) {
  * @return
  */
 bool Message::verifyMessage(string data, string debut, string fin) {
-    return debut.length()                           < 3
-        || fin.length()                             < 3
+    return debut.length()                           > 6
+        || fin.length()                             > 6
         || debut.substr(0, 2)                       != SEPARATOR_DEBUT
         || fin.substr(fin.length()-2, fin.length()) != SEPARATOR_FIN
         || debut.substr(2, debut.length())          != fin.substr(0, fin.length()-2)
@@ -193,4 +205,54 @@ void Message::assignValueToCorrectAttribute(string& data) {
     } else if (dataAndValue[0] == "ecoute") {
         ecoute = new float(stof(dataAndValue[1]));
     }
+}
+
+/**
+ * METHOD
+ *
+ * @brief copy : return a copy of this object
+ * @param m
+ * @return
+ */
+Message Message::copy() {
+    Message m;
+
+    if (type) {
+        m.setType(new string (*type));
+    }
+    if (id_sender) {
+        m.setIdSender(new int (*id_sender));
+    }
+    if (id_dest) {
+        m.setIdDest(new int (*id_dest));
+    }
+    if (id_concern) {
+        m.setIdConcern(new int (*id_concern));
+    }
+    if (longitude) {
+        m.setLongitude(new float (*longitude));
+    }
+    if (latitude) {
+        m.setLatitude(new float (*latitude));
+    }
+    if (cap) {
+        m.setCap(new float (*cap));
+    }
+    if (vitesse) {
+        m.setVitesse(new float (*vitesse));
+    }
+    if (gite) {
+        m.setGite(new float (*gite));
+    }
+    if (tangage) {
+        m.setTangage(new float (*tangage));
+    }
+    if (barre) {
+        m.setBarre(new float (*barre));
+    }
+    if (ecoute) {
+        m.setEcoute(new float (*ecoute));
+    }
+
+    return m;
 }
