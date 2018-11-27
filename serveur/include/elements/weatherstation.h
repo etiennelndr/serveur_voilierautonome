@@ -10,7 +10,7 @@ class Message;
  */
 class WeatherStation {
     public:
-        WeatherStation(int _id, float _longitude, float _latitude);
+        WeatherStation(int _id);
         WeatherStation();
 
         // Getters
@@ -22,6 +22,7 @@ class WeatherStation {
         float* get_cap_addr();
         float* get_longitude_addr();
         float* get_latitude_addr();
+        int    get_id();
 
         // Setters
         void set_vitesse(float _vitesse) ;
@@ -46,6 +47,7 @@ inline float* WeatherStation::get_vitesse_addr()   { return &vitesse; }
 inline float* WeatherStation::get_cap_addr()       { return &cap; }
 inline float* WeatherStation::get_longitude_addr() { return &longitude; }
 inline float* WeatherStation::get_latitude_addr()  { return &latitude; }
+inline int    WeatherStation::get_id()             { return id; }
 
 //setters
 inline void WeatherStation::set_vitesse(float _vitesse)    { vitesse=_vitesse; }

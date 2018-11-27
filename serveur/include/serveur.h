@@ -6,6 +6,7 @@
 #include <QtGui>
 #include <QtNetwork>
 #include <QString>
+#include <QDebug>
 #include <iostream>
 #include <map>
 #include "serialdata.h"
@@ -44,9 +45,12 @@ class ServeurTcp : public QTcpServer {
         SerialData *uart;
 
         void sendDataToUART(Message);
+        void sendDataToTCP(Message msg, int id_client);
         void sendIdToUART(int);
         void treatBoatDatas(Message);
         void sendToBoat(Message, int);
+        void transferDataFromUARTToComputersAndBoats(Message msg);
+        bool filterMessageFromBoat(Message original, Message* for_all);
 
         // ---- WILL BE DELETED IN THE FUTURE ----
         QStringList weatherStationsId;
@@ -68,6 +72,7 @@ class ServeurTcp : public QTcpServer {
         bool getComputerWithId(Computer&, int);
         bool getComputerWithIndexOfSocket(Computer&, int);
 
+        void sendToAll(Message message, bool _computers, bool _boats, bool _weatherStations, int id_boat_exception, int id_computer_exception);
         void sendToAllExceptWeatherStation(Message);
         void sendToAllComputersExcept(Message, int);
         void sendToAllComputers(Message);

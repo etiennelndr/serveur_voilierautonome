@@ -7,10 +7,10 @@
  *
  * @brief WeatherStation::WeatherStation
  */
-WeatherStation::WeatherStation(int _id, float _longitude, float _latitude) {
+WeatherStation::WeatherStation(int _id) {
     this->id = _id;
-    this->longitude = _longitude;
-    this->latitude = _latitude;
+    //this->longitude = _longitude;
+    //this->latitude = _latitude;
 }
 WeatherStation::WeatherStation() {
     this->id = -1;
