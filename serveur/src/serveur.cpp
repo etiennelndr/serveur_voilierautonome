@@ -21,7 +21,7 @@ ServeurTcp::ServeurTcp(quint16 port) {
     }
 
     // Create the UART
-    uart = new SerialData(QString("COM5"), nullptr);
+    uart = new SerialData(QString("COM4"), nullptr);
     // Connect it -> when receivedDataFromUART signal is emitted, call readDataFromUART slot
     connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
 
@@ -206,13 +206,12 @@ bool ServeurTcp::checkConnectionTCPIP(Message data, QTcpSocket* socket) {
  */
 void ServeurTcp::treatBoatDatas(Message msg) {
     // Insert datas in the database
-    QSqlError err = db->insertInDatabase(msg);
+    QSqlError err = db->insertInDatabase(msg.copy());
     if (err.type() != QSqlError::NoError)
         cout << "Erreur: " << err.text().toStdString() << endl;
 
     // TODO
 }
-
 
 /**
  * METHOD
@@ -258,9 +257,21 @@ bool ServeurTcp::getComputerWithIndexOfSocket(Computer &c, int indexOfSocket) {
  */
 void ServeurTcp::addNewBoat(Message b) {
     Boat boat(*b.getIdConcern());
-    // Push it in the vector boats
-    boats.push_back(boat);
-    qDebug() << "New boat with id : " << *b.getIdConcern();
+
+    bool isInBoatsVector = false;
+    for (unsigned int i=0; i < boats.size(); i++) {
+        if (boats[i].get_id() == *b.getIdConcern()) {
+            isInBoatsVector = true;
+            break;
+        }
+    }
+
+    if (!isInBoatsVector) {
+        // Push it in the vector boats
+        boats.push_back(boat);
+        qDebug() << "New boat with id : " << *b.getIdConcern();
+    } else
+        qDebug() << "Boat with id " << *b.getIdConcern() << " is already registered.";
 }
 
 /**
@@ -272,9 +283,21 @@ void ServeurTcp::addNewBoat(Message b) {
  */
 void ServeurTcp::addNewComputer(Message c, int indexOfSocket) {
     Computer computer(*c.getIdConcern(), indexOfSocket);
-    // Push it in the vector boats
-    computers.push_back(computer);
-    qDebug() << "New computer with id : " << *c.getIdConcern();
+
+    bool isInComputersVector = false;
+    for (unsigned int i=0; i < computers.size(); i++) {
+        if (computers[i].getId() == *c.getIdConcern()) {
+            isInComputersVector = true;
+            break;
+        }
+    }
+
+    if (!isInComputersVector) {
+        // Push it in the vector computers
+        computers.push_back(computer);
+        qDebug() << "New computer with id : " << *c.getIdConcern();
+    } else
+        qDebug() << "Computer with id " << *c.getIdConcern() << " is already registered.";
 }
 
 /**
@@ -285,9 +308,21 @@ void ServeurTcp::addNewComputer(Message c, int indexOfSocket) {
  */
 void ServeurTcp::addNewWeatherStation(Message ws) {
     WeatherStation weatherStation(*ws.getIdConcern());
-    // Push it in the vector boats
-    weatherStations.push_back(weatherStation);
-    qDebug() << "New weatherstation with id : " << *ws.getIdConcern();
+
+    bool isInWeatherStationsVector = false;
+    for (unsigned int i=0; i < weatherStations.size(); i++) {
+        if (weatherStations[i].get_id() == *ws.getIdConcern()) {
+            isInWeatherStationsVector = true;
+            break;
+        }
+    }
+
+    if (!isInWeatherStationsVector) {
+        // Push it in the vector weatherStations
+        weatherStations.push_back(weatherStation);
+        qDebug() << "New weatherstation with id : " << *ws.getIdConcern();
+    } else
+        qDebug() << "Weather station with id " << *ws.getIdConcern() << " is already registered.";
 }
 
 
