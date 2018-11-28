@@ -8,6 +8,15 @@ using std::endl;
 /**
  * CONSTRUCTOR
  *
+ * @brief ServeurTcp::ServeurTcp : default constructor
+ */
+ServeurTcp::ServeurTcp() {
+
+}
+
+/**
+ * CONSTRUCTOR
+ *
  * @brief ServeurTcp::ServeurTcp : TODO
  * @param port
  */
@@ -27,9 +36,6 @@ ServeurTcp::ServeurTcp(quint16 port) {
 
     // Connect to the database
     db = new Database(QString::fromStdString(exePath() + "\\..\\..\\serveur\\voilierautonome.db"));
-    QSqlError err = db->resetDatabase();
-    if (err.type() != QSqlError::NoError)
-        cout << "Erreur: " << err.text().toStdString() << endl;
 
     // Set length of message to 0
     tailleMessage = 0;
@@ -41,9 +47,11 @@ ServeurTcp::ServeurTcp(quint16 port) {
  * @brief ServeurTcp::~ServeurTcp : TODO
  */
 ServeurTcp::~ServeurTcp() {
-    qDeleteAll(clients);
-    delete uart;
-    delete db;
+    if (isListening()) {
+        qDeleteAll(clients);
+        delete uart;
+        delete db;
+    }
     cout << "Server: OFF" << endl;
 }
 
@@ -69,6 +77,8 @@ void ServeurTcp::start_uart(){
  * @param message
  */
 void ServeurTcp::sendToAll(Message message, bool _computers=false, bool _boats=false, bool _weatherStations=false, int id_boat_exception=0, int id_computer_exception=0) {
+    cout << "sendToAll" << endl;
+
     message.setType(new string("S"));
     message.setIdSender(new int(0));
     if(_computers) { //send to computers
@@ -76,7 +86,7 @@ void ServeurTcp::sendToAll(Message message, bool _computers=false, bool _boats=f
         for (unsigned int i = 0; i < computers.size(); i++) {
             if (computers.at(i).getId() != id_computer_exception) {
                 message.setIdDest(new int(computers.at(i).getId()));
-                sendDataToTCP(message, computers.at(i).getIndexOfSocket());
+                sendDataToTCP(message.copy(), computers.at(i).getIndexOfSocket());
             }
         }
     }
@@ -84,14 +94,14 @@ void ServeurTcp::sendToAll(Message message, bool _computers=false, bool _boats=f
         for (unsigned int i=0; i < boats.size(); i++) {
             if (boats.at(i).get_id() != id_boat_exception) {
                 message.setIdDest(new int(boats.at(i).get_id()));
-                sendDataToUART(message);
+                sendDataToUART(message.copy());
             }
         }
     }
     if(_weatherStations) { //send to weather stations
         for (unsigned int i=0; i < weatherStations.size(); i++) {
             message.setIdDest(new int((boats.at(i).get_id())));
-            sendDataToUART(message);
+            sendDataToUART(message.copy());
         }
     }
 }
@@ -104,6 +114,7 @@ void ServeurTcp::sendToAll(Message message, bool _computers=false, bool _boats=f
  * @param client
  */
 void ServeurTcp::sendToComputer(Message message, int id) {
+    cout << "sendToComputer" << endl;
     // Préparation du paquet
     message.setType(new string("S"));
     message.setIdSender(new int(0));
@@ -149,6 +160,8 @@ bool ServeurTcp::checkConnectionUART(Message msg) {
     if (msg.getType()->length() != 2)
         return false;
 
+    cout << msg.encodeData().toStdString() << endl;
+
     if (*msg.getType() == "MC") {
         // Connection d'une station météo
         addNewWeatherStation(msg);
@@ -171,7 +184,6 @@ void ServeurTcp::sendDataToTCP(Message msg, int id_socket) {
     // Préparation du paquet
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
-    uart->sendData(msg);
     out << quint16(0);    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
     out << msg.encodeData();        // On ajoute le message à la suite
     out.device()->seek(0); // On se replace au début du paquet
@@ -326,6 +338,12 @@ void ServeurTcp::addNewWeatherStation(Message ws) {
 }
 
 
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::transferDataFromUARTToComputersAndBoats : TODO
+ * @param msg
+ */
 void ServeurTcp::transferDataFromUARTToComputersAndBoats(Message msg){
     // Transmit datas to computer
     if (*msg.getIdSender() > 0) {
@@ -333,14 +351,11 @@ void ServeurTcp::transferDataFromUARTToComputersAndBoats(Message msg){
         // First of all, treat the datas
         treatBoatDatas(msg.copy());
         Message msg_for_all;
-        Computer c;
-        if (getComputerWithId(c, *msg.getIdConcern())) {
-            // Send all datas to the computer which is linked to the boat
-            sendToComputer(msg, *msg.getIdConcern());
-            // Send longitude and latitude to other boats and computers
-            if(filterMessageFromBoat(msg, &msg_for_all)){
-                sendToAll(msg_for_all, true, true, false, *msg.getIdConcern(), *msg.getIdConcern());
-            }
+        // Send all datas to the computer which is linked to the boat
+        sendToComputer(msg.copy(), *msg.getIdConcern());
+        // Send longitude and latitude to other boats and computers
+        if(filterMessageFromBoat(msg.copy(), &msg_for_all)) {
+            sendToAll(msg_for_all, true, true, false, *msg.getIdConcern(), *msg.getIdConcern());
         }
     } else if (*msg.getIdConcern() < 0) {
         // This message comes from a weather station
@@ -351,29 +366,30 @@ void ServeurTcp::transferDataFromUARTToComputersAndBoats(Message msg){
 /**
  * METHOD
  *
- * @brief ServeurTcp::filterMessageFromBoat : TODO
+ * @brief ServeurTcp::filterMessageFromBoat : Selections of data to be transfered to all computers and boats
  * @param original
  * @param for_all
  * @return bool
  */
-bool ServeurTcp::filterMessageFromBoat(Message original, Message* for_all){ // Selections of data to be transfered to all computers and boats
+bool ServeurTcp::filterMessageFromBoat(Message original, Message* for_all){
+    cout << "filterMessageFromBoat" << endl;
     bool result=false;
-    if(original.getLongitude()){
+    if(original.getLongitude()) {
         for_all->setLongitude(original.getLongitude());
         result=true;
     }
 
-    if(original.getLatitude()){
+    if(original.getLatitude()) {
         for_all->setLatitude(original.getLatitude());
         result=true;
     }
 
-    if(original.getCap()){
+    if(original.getCap()) {
         for_all->setCap(original.getCap());
         result=true;
     }
 
-    if(result){
+    if(result) {
         for_all->setType(original.getType());
         for_all->setIdSender(original.getIdSender());
         for_all->setIdDest(original.getIdDest());
@@ -485,7 +501,7 @@ void ServeurTcp::readDataFromUART(Message msg) {
         emit received_data(msg.encodeData());
 
         if (!msg.getError() && !checkConnectionUART(msg.copy())) {
-//            transferDataFromUARTToComputersAndBoats(msg.copy());
+            transferDataFromUARTToComputersAndBoats(msg.copy());
         }
     }
 }

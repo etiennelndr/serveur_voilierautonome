@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 
+#include "utils.h"
+
 using std::cout;
 using std::endl;
 
@@ -12,6 +14,8 @@ using std::endl;
 MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
     connect(ui->lancement_serveur, SIGNAL(clicked()), this, SLOT(state()));
+    connect(ui->button_resetDB, SIGNAL(clicked()), this, SLOT(resetDB()));
+    connect(ui->button_exportDatas, SIGNAL(clicked()), this, SLOT(exportDatas()));
 }
 
 /**
@@ -38,7 +42,7 @@ MainWindow::~MainWindow() {
  */
 void MainWindow::write_in_konsole(QString log) {
     ui->konsole->append(log);
-    cout << log.toStdString() << endl;
+    //cout << log.toStdString() << endl;
 }
 
 /*--------------------------*
@@ -65,7 +69,7 @@ void MainWindow::state() {
 }
 
 /**
- * SLOT ->
+ * SLOT -> TODO
  *
  * @brief MainWindow::start_uart : TODO
  */
@@ -73,6 +77,31 @@ void MainWindow::start_uart() {
     if (serveur) {
         serveur->start_uart();
     }
+}
+
+/**
+ * SLOT -> TODO
+ *
+ * @brief MainWindow::exportDatasOf : TODO
+ */
+void MainWindow::exportDatas() {
+    if (!serveur) {
+        cout << "exportDatas" << endl;
+    }
+}
+
+/**
+ * SLOT -> TODO
+ *
+ * @brief MainWindow::resetDB : TODO
+ */
+void MainWindow::resetDB() {
+    cout << "resetDB" << endl;
+    /*
+    Database db(QString::fromStdString(exePath() + "\\..\\..\\serveur\\voilierautonome.db"));
+    QSqlError err = db.resetDatabase();
+    if (err.type() != QSqlError::NoError)
+        cout << "Erreur: " << err.text().toStdString() << endl;*/
 }
 
 /**

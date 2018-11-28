@@ -76,7 +76,7 @@ void SerialData::start_simulator() {
  */
 void SerialData::readData() {
     QString datas = QString(mPort->readAll().data());
-    qDebug() << "Serial data IN : " << datas;
+    //qDebug() << "Serial data IN : " << datas;
 
     // Split datas because we can receive multiple messages in a single row
     vector<string> messages = split(datas.toStdString(), "//");

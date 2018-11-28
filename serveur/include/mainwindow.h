@@ -39,6 +39,8 @@ class MainWindow : public QMainWindow {
         void state();
         void msg_processing(QString msg);
         void start_uart();
+        void exportDatas();
+        void resetDB();
 };
 
 /**

@@ -65,6 +65,12 @@ QSqlError Database::resetDatabase() {
     else
         db.rollback(); // Else rollback changes
 
+    // Set the auto increment value to 0
+    if (query.exec("UPDATE sqlite_sequence SET seq = 0 WHERE name = '" + ELEMENTS + "'"))
+        db.commit(); // Commit changes
+    else
+        db.rollback(); // Else rollback changes
+
     // Return the error (could be empty)
     return query.lastError();
 }

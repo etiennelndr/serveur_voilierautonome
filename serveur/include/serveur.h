@@ -25,6 +25,7 @@ class ServeurTcp : public QTcpServer {
     Q_OBJECT
     public:
         ServeurTcp(quint16 port);
+        ServeurTcp();
         ~ServeurTcp();
         void start_uart();
 
@@ -51,11 +52,6 @@ class ServeurTcp : public QTcpServer {
         void sendToBoat(Message, int);
         void transferDataFromUARTToComputersAndBoats(Message msg);
         bool filterMessageFromBoat(Message original, Message* for_all);
-
-        // ---- WILL BE DELETED IN THE FUTURE ----
-        QStringList weatherStationsId;
-        QStringList boatsId;
-        // ---- WILL BE DELETED IN THE FUTURE ----
 
         // Boats vector
         vector<Boat>           boats;
