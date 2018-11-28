@@ -78,8 +78,8 @@ class ServeurTcp : public QTcpServer {
         void sendToAllComputers(Message);
         void sendToComputer(Message, int);
         void sendToAllBoatsExcept(Message, int);
-        boolean checkConnectionUART(Message);
-        boolean checkConnectionTCPIP(Message, QTcpSocket*);
+        bool checkConnectionUART(Message);
+        bool checkConnectionTCPIP(Message, QTcpSocket*);
 
         // Database to store each message
         Database* db;

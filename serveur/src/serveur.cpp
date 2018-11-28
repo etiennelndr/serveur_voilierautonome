@@ -62,7 +62,6 @@ void ServeurTcp::start_uart(){
     uart->start_simulator();
 }
 
-
 /**
  * METHOD
  *
@@ -72,7 +71,7 @@ void ServeurTcp::start_uart(){
 void ServeurTcp::sendToAll(Message message, bool _computers=false, bool _boats=false, bool _weatherStations=false, int id_boat_exception=0, int id_computer_exception=0) {
     message.setType(new string("S"));
     message.setIdSender(new int(0));
-    if(_computers){ //send to computers
+    if(_computers) { //send to computers
         // Envoi du paquet préparé à tous les clients connectés au serveur
         for (unsigned int i = 0; i < computers.size(); i++) {
             if (computers.at(i).getId() != id_computer_exception) {
@@ -81,7 +80,7 @@ void ServeurTcp::sendToAll(Message message, bool _computers=false, bool _boats=f
             }
         }
     }
-    if(_boats){ //send to boats
+    if(_boats) { //send to boats
         for (unsigned int i=0; i < boats.size(); i++) {
             if (boats.at(i).get_id() != id_boat_exception) {
                 message.setIdDest(new int(boats.at(i).get_id()));
@@ -89,60 +88,13 @@ void ServeurTcp::sendToAll(Message message, bool _computers=false, bool _boats=f
             }
         }
     }
-    if(_weatherStations){ //send to weather stations
+    if(_weatherStations) { //send to weather stations
         for (unsigned int i=0; i < weatherStations.size(); i++) {
             message.setIdDest(new int((boats.at(i).get_id())));
             sendDataToUART(message);
         }
     }
 }
-
-///**
-// * METHOD
-// *
-// * @brief ServeurTcp::sendToAllComputers : send to all TCP/IP clients (members of computers vector)
-// * @param message
-// */
-//void ServeurTcp::sendToAllComputers(Message message) {
-//    for (unsigned int i = 0; i < computers.size(); i++) {
-//        message.setIdDest(new int(computers.at(i).getId()));
-
-//        out << quint16(0);    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
-//        out << message.encodeData();        // On ajoute le message à la suite
-//        out.device()->seek(0); // On se replace au début du paquet
-//        out << quint16((paquet.size() - int(sizeof(quint16)))); // On écrase le 0 qu'on avait réservé par la longueur du message
-
-//        clients[computers.at(i).getIndexOfSocket()]->write(paquet);
-//    }
-//}
-
-/**
- * METHOD
- *
- * @brief ServeurTcp::sendToAllComputersExcept : Send to all the PC registered in the "computers" vector exept the one with the given id
- * @param message
- * @param client
- */
-//void ServeurTcp::sendToAllComputersExcept(Message message, int idComputerToIgnore) {
-//    // Préparation du paquet
-//    QByteArray paquet;
-//    QDataStream out(&paquet, QIODevice::WriteOnly);
-//    message.setType(new string("S"));
-//    message.setIdSender(new int(0));
-//    // Envoi du paquet préparé à tous les clients connectés au serveur
-//    for (unsigned int i = 0; i < computers.size(); i++) {
-//        if (computers.at(i).getId() != idComputerToIgnore) {
-//            message.setIdDest(new int(computers.at(i).getId()));
-
-//            out << quint16(0);    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
-//            out << message.encodeData();        // On ajoute le message à la suite
-//            out.device()->seek(0); // On se replace au début du paquet
-//            out << quint16((paquet.size() - int(sizeof(quint16)))); // On écrase le 0 qu'on avait réservé par la longueur du message
-
-//            clients[computers.at(i).getIndexOfSocket()]->write(paquet);
-//        }
-//    }
-//}
 
 /**
  * METHOD
@@ -164,59 +116,6 @@ void ServeurTcp::sendToComputer(Message message, int id) {
 /**
  * METHOD
  *
- * @brief ServeurTcp::sendToAllExceptWeatherStation : TODO
- * @param message
- */
-//void ServeurTcp::sendToAllExceptWeatherStation(Message message) {
-//    // Envoi du paquet préparé à tous les clients connectés au serveur
-//    for (int i = 0; i < clients.size(); i++) {
-//        // Préparation du paquet
-//        QByteArray paquet;
-//        QDataStream out(&paquet, QIODevice::WriteOnly);
-
-//        // Envoi du paquet préparé à tous les clients connectés au serveur
-//        for (unsigned int i = 0; i < computers.size(); i++) {
-//            message.setIdDest(new int(computers.at(i).getId()));
-//            out << quint16(0);    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
-//            out << message.encodeData();        // On ajoute le message à la suite
-//            out.device()->seek(0); // On se replace au début du paquet
-//            out << quint16((paquet.size() - int(sizeof(quint16)))); // On écrase le 0 qu'on avait réservé par la longueur du message
-//            clients[computers.at(i).getIndexOfSocket()]->write(paquet);
-//        }
-
-//        // Set the id of  the recipient
-//        message.setIdDest(new int(i));
-//        // Send the data to the specific boat
-//        uart->sendData(message);
-//    }
-//}
-
-
-/**
- * METHOD
- *
- * @brief ServeurTcp::sendToAllBoatsExcept : TODO
- * @param message
- * @param id
- */
-//void ServeurTcp::sendToAllBoatsExcept(Message message, int id) {
-//    for (int i=0; i < boatsId.size(); i++) {
-//        if (i != id) {
-//            Message msg;
-//            msg.setType(new string("S"));
-//            msg.setIdConcern(message.getIdSender());
-//            msg.setIdDest(message.getIdConcern());
-//            msg.setIdSender(new int(0));
-//            msg.setLatitude(message.getLatitude());
-//            msg.setLongitude(message.getLongitude());
-//            sendDataToUART(msg);
-//        }
-//    }
-//}
-
-/**
- * METHOD
- *
  * @brief ServeurTcp::sendToBoat: TODO
  * @param msg
  * @param id
@@ -228,9 +127,6 @@ void ServeurTcp::sendToBoat(Message msg, int id) {
     msg.setIdSender(new int(0));
     sendDataToUART(msg);
 }
-
-
-
 
 /**
  * METHOD
@@ -247,9 +143,9 @@ void ServeurTcp::sendDataToUART(Message msg) {
  *
  * @brief ServeurTcp::checkConnectionUART : TODO
  * @param msg
- * @return
+ * @return bool
  */
-boolean ServeurTcp::checkConnectionUART(Message msg) {
+bool ServeurTcp::checkConnectionUART(Message msg) {
     if (msg.getType()->length() != 2)
         return false;
 
@@ -263,7 +159,6 @@ boolean ServeurTcp::checkConnectionUART(Message msg) {
 
     return true;
 }
-
 
 /**
  * METHOD
@@ -291,7 +186,7 @@ void ServeurTcp::sendDataToTCP(Message msg, int id_socket) {
  * @param data
  * @param socket
  */
-boolean ServeurTcp::checkConnectionTCPIP(Message data, QTcpSocket* socket) {
+bool ServeurTcp::checkConnectionTCPIP(Message data, QTcpSocket* socket) {
     if (data.getType()->length() != 2)
         return false;
 
@@ -325,7 +220,7 @@ void ServeurTcp::treatBoatDatas(Message msg) {
  * @brief ServeurTcp::getComputer : TODO
  * @param c
  * @param id
- * @return
+ * @return bool
  */
 bool ServeurTcp::getComputerWithId(Computer &c, int id) {
     for (unsigned int i=0; i<computers.size(); i++) {
@@ -343,7 +238,7 @@ bool ServeurTcp::getComputerWithId(Computer &c, int id) {
  * @brief ServeurTcp::getComputerWithIndexOfSocket : TODO
  * @param c
  * @param indexOfSocket
- * @return
+ * @return bool
  */
 bool ServeurTcp::getComputerWithIndexOfSocket(Computer &c, int indexOfSocket) {
     for (unsigned int i=0; i<computers.size(); i++) {
@@ -418,6 +313,14 @@ void ServeurTcp::transferDataFromUARTToComputersAndBoats(Message msg){
     }
 }
 
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::filterMessageFromBoat : TODO
+ * @param original
+ * @param for_all
+ * @return bool
+ */
 bool ServeurTcp::filterMessageFromBoat(Message original, Message* for_all){ // Selections of data to be transfered to all computers and boats
     bool result=false;
     if(original.getLongitude()){
