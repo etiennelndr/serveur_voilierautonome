@@ -19,6 +19,10 @@
   <property name="windowTitle">
    <string>Serveur</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
+  </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
@@ -28,14 +32,40 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
+    <item>
      <widget class="QPushButton" name="lancement_serveur">
       <property name="text">
        <string>Lancement Serveur + Simulateur UART</string>
       </property>
      </widget>
     </item>
-    <item row="3" column="1">
+    <item alignment="Qt::AlignHCenter">
+     <widget class="QWidget" name="widget_uart" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLabel" name="label_uart">
+         <property name="text">
+          <string>Numéro de port UART (n° COM)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="COM">
+         <property name="minimum">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
      <widget class="QTextEdit" name="konsole">
       <property name="enabled">
        <bool>true</bool>
@@ -54,14 +84,14 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="1">
+    <item>
      <widget class="QPushButton" name="button_resetDB">
       <property name="text">
        <string>Reset Database</string>
       </property>
      </widget>
     </item>
-    <item row="6" column="1">
+    <item>
      <widget class="QWidget" name="widget_exportDatas" native="true">
       <property name="minimumSize">
        <size>
@@ -69,35 +99,40 @@
         <height>50</height>
        </size>
       </property>
-      <widget class="QPushButton" name="button_exportDatas">
-       <property name="enabled">
-        <bool>true</bool>
+      <layout class="QHBoxLayout" name="horizontalLayout_2">
+       <property name="spacing">
+        <number>0</number>
        </property>
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>10</y>
-         <width>331</width>
-         <height>28</height>
-        </rect>
+       <property name="leftMargin">
+        <number>0</number>
        </property>
-       <property name="text">
-        <string>Export datas</string>
+       <property name="rightMargin">
+        <number>0</number>
        </property>
-      </widget>
-      <widget class="QSpinBox" name="spinBox_exportDatas">
-       <property name="geometry">
-        <rect>
-         <x>330</x>
-         <y>11</y>
-         <width>41</width>
-         <height>26</height>
-        </rect>
-       </property>
-       <property name="minimum">
-        <number>1</number>
-       </property>
-      </widget>
+       <item>
+        <widget class="QPushButton" name="button_exportDatas">
+         <property name="enabled">
+          <bool>true</bool>
+         </property>
+         <property name="text">
+          <string>Export datas</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="spinBox_exportDatas">
+         <property name="maximumSize">
+          <size>
+           <width>40</width>
+           <height>16777215</height>
+          </size>
+         </property>
+         <property name="minimum">
+          <number>1</number>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </widget>
     </item>
    </layout>
@@ -107,7 +142,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>499</width>
+     <width>400</width>
      <height>20</height>
     </rect>
    </property>
