@@ -378,6 +378,7 @@ void ServeurTcp::transferDataFromUARTToComputersAndBoats(Message msg){
             sendToAll(msg_for_all, true, true, false, *msg.getIdConcern(), *msg.getIdConcern());
         }
     } else if (*msg.getIdConcern() < 0) {
+        treatBoatDatas(msg.copy());
         // This message comes from a weather station
         sendToAll(msg.copy(), true, true, false); //Send to all boats and computers
     }
