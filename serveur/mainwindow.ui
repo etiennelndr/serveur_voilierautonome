@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>499</width>
-    <height>602</height>
+    <width>400</width>
+    <height>606</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -32,36 +32,14 @@
       </property>
      </widget>
     </item>
-    <item alignment="Qt::AlignHCenter">
-     <widget class="QWidget" name="widget_uart" native="true">
-      <property name="minimumSize">
-       <size>
-        <width>0</width>
-        <height>30</height>
-       </size>
-      </property>
-      <layout class="QHBoxLayout" name="horizontalLayout_5">
-       <item>
-        <widget class="QLabel" name="label_uart">
-         <property name="text">
-          <string>Port UART (n° COM)</string>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QSpinBox" name="COM"/>
-       </item>
-      </layout>
-     </widget>
-    </item>
-    <item>
+    <item row="2" column="1">
      <widget class="QPushButton" name="lancement_serveur">
       <property name="text">
        <string>Lancement Serveur + Simulateur UART</string>
       </property>
      </widget>
     </item>
-    <item>
+    <item row="3" column="1">
      <widget class="QTextEdit" name="konsole">
       <property name="enabled">
        <bool>true</bool>
@@ -78,23 +56,52 @@
         <height>16777215</height>
        </size>
       </property>
-      <property name="readOnly">
-       <bool>true</bool>
-      </property>
      </widget>
     </item>
-    <item>
+    <item row="4" column="1">
      <widget class="QPushButton" name="button_resetDB">
       <property name="text">
        <string>Reset Database</string>
       </property>
      </widget>
     </item>
-    <item>
-     <widget class="QPushButton" name="button_exportDatas">
-      <property name="text">
-       <string>Export datas</string>
+    <item row="6" column="1">
+     <widget class="QWidget" name="widget_exportDatas" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>50</width>
+        <height>50</height>
+       </size>
       </property>
+      <widget class="QPushButton" name="button_exportDatas">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>0</x>
+         <y>10</y>
+         <width>331</width>
+         <height>28</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Export datas</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinBox_exportDatas">
+       <property name="geometry">
+        <rect>
+         <x>330</x>
+         <y>11</y>
+         <width>41</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>

@@ -24,8 +24,10 @@ class Database : public QObject {
         // Reset the database
         QSqlError resetDatabase();
 
-        // Inset in the database
+        // Insert in the database
         QSqlError insertInDatabase(Message msg);
+
+        QSqlQuery exportAllDatasOf(int);
 
     private:
         // Qt Database

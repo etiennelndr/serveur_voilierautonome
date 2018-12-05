@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 
+#include <QMessageBox>
 #include "utils.h"
 
 using std::cout;
@@ -16,6 +17,9 @@ MainWindow::MainWindow(QWidget* parent): QMainWindow(parent), ui(new Ui::MainWin
     connect(ui->lancement_serveur, SIGNAL(clicked()), this, SLOT(state()));
     connect(ui->button_resetDB, SIGNAL(clicked()), this, SLOT(resetDB()));
     connect(ui->button_exportDatas, SIGNAL(clicked()), this, SLOT(exportDatas()));
+
+    isResettingDatabase = false;
+    isExportingDatabase = false;
 }
 
 /**
@@ -85,11 +89,28 @@ void MainWindow::start_uart() {
 /**
  * SLOT -> TODO
  *
- * @brief MainWindow::exportDatasOf : TODO
+ * @brief MainWindow::exportDatas : TODO
  */
 void MainWindow::exportDatas() {
     if (!serveur) {
+        isExportingDatabase = true;
+
         cout << "exportDatas" << endl;
+        serveur = new ServeurTcp();
+
+        // Retrieve the id of the spin box
+        int id = ui->spinBox_exportDatas->value();
+
+        QString result = serveur->exportDatas(id);
+
+        if (result == "Unknown error")
+            QMessageBox::information(this, "Succès", "L'exportation des données a été exécutée avec succès");
+        else
+            QMessageBox::information(this, "Erreur", result);
+
+        // Close the server
+        delete serveur;
+        serveur = nullptr;
     }
 }
 
@@ -99,12 +120,23 @@ void MainWindow::exportDatas() {
  * @brief MainWindow::resetDB : TODO
  */
 void MainWindow::resetDB() {
-    cout << "resetDB" << endl;
-    /*
-    Database db(QString::fromStdString(exePath() + "\\..\\..\\serveur\\voilierautonome.db"));
-    QSqlError err = db.resetDatabase();
-    if (err.type() != QSqlError::NoError)
-        cout << "Erreur: " << err.text().toStdString() << endl;*/
+    if (!serveur) {
+        isResettingDatabase = true;
+
+        cout << "resetDB" << endl;
+        serveur = new ServeurTcp();
+
+        // Reset the database
+        QSqlError err = serveur->resetDb();
+        if (err.type() == QSqlError::NoError)
+            QMessageBox::information(this, "Succès", "La base de données a été réinitialisée avec succès");
+        else
+            QMessageBox::information(this, "Erreur", err.text());
+
+        // Close the server
+        delete serveur;
+        serveur = nullptr;
+    }
 }
 
 /**

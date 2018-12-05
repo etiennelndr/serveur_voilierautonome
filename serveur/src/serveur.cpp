@@ -1,6 +1,7 @@
 #include "serveur.h"
 
 #include "utils.h"
+#include <QFileDevice>
 
 using std::cout;
 using std::endl;
@@ -11,7 +12,8 @@ using std::endl;
  * @brief ServeurTcp::ServeurTcp : default constructor
  */
 ServeurTcp::ServeurTcp() {
-
+    // Connect to the database
+    db = new Database(QString::fromStdString(exePath() + "\\..\\..\\serveur\\voilierautonome.db"));
 }
 
 /**
@@ -50,8 +52,8 @@ ServeurTcp::~ServeurTcp() {
     if (isListening()) {
         qDeleteAll(clients);
         delete uart;
-        delete db;
     }
+    delete db;
     cout << "Server: OFF" << endl;
 }
 
@@ -416,7 +418,78 @@ bool ServeurTcp::filterMessageFromBoat(Message original, Message* for_all){
     return result;
 }
 
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::resetDb : resetting the database
+ * @return QSqlError
+ */
+QSqlError ServeurTcp::resetDb() {
+    return db->resetDatabase();
+}
 
+/**
+ * METHOD
+ *
+ * @brief ServeurTcp::exportDatas : exporting datas
+ * @return bool
+ * @param id
+ */
+QString ServeurTcp::exportDatas(int id) {
+    // Get all of the datas
+    QSqlQuery result = db->exportAllDatasOf(id);
+    if (result.lastError().type() != QSqlError::NoError)
+        return result.lastError().text();
+
+    // Create the name of the file
+    QString filename = QString::fromStdString(exePath())
+            + "\\..\\..\\serveur\\exportedDatas_"
+            + QString::number(id)
+            + "_"
+            + QDateTime::currentDateTime().toString("dd-MM-yyyy_hh-mm-ss")
+            + ".csv";
+    // Instantiate a QFile object with the previous filename
+    QFile file(filename);
+    // Open the file
+    if (file.open(QIODevice::ReadWrite)) {
+        // Create a new QTextStream object with a reference to the previous file
+        QTextStream stream(&file);
+
+        // Init the csv with column headers
+        stream << "type,id_sender,id_dest,id_concern,longitude,latitude,cap,vitesse,gite,tangage" << endl;
+
+        while (result.next()) {
+            QString type = result.value(1).toString();
+            QString id_sender = result.value(2).toString();
+            QString id_dest = result.value(3).toString();
+            QString id_concern = result.value(4).toString();
+            QString longitude = result.value(5).toString();
+            QString latitude = result.value(6).toString();
+            QString cap = result.value(7).toString();
+            QString vitesse = result.value(8).toString();
+            QString gite = result.value(9).toString();
+            QString tangage = result.value(10).toString();
+
+
+            // Write in the file
+            stream << type << ","
+                   << id_sender << ","
+                   << id_dest << ","
+                   << id_concern << ","
+                   << longitude << ","
+                   << latitude << ","
+                   << cap << ","
+                   << vitesse << ","
+                   << gite << ","
+                   << tangage << ","<< endl;
+        }
+    }
+
+    // Close the file
+    file.close();
+
+    return file.errorString();
+}
 
 /*--------------------------*
  *                          *
