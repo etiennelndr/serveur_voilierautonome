@@ -55,7 +55,7 @@ void loop() {
     }
     else {
       started=true;
-      message(2);
+      message(1);
     }
     delay(1000);
     i++;
@@ -90,10 +90,33 @@ void message(int mode) {
             msg = msg + "cap:" + cap + "&";
             break;
           case 3 :
-            longitude = longitude + 0.0001;
-            msg = msg + "longitude:" + longitude + "&";
-            latitude = latitude + 0.0001;
-            msg = msg + "latitude:" + latitude + "&";
+            longitude = longitude + 0.000001;
+            if (longitude>10.0 || longitude<-10.0){
+              deci_long = deci_long + int(longitude/10);
+              longitude = longitude - deci_long*10;
+            }
+            if (deci_long != 0){
+              msg = msg + "longitude:" + deci_long + String(fabs(longitude),6) + "&";
+            }
+            else
+            {
+              msg = msg + "longitude:" + String(longitude,6) + "&";
+            }
+            
+            msg = msg + "longitude:" + String(longitude,6) + "&";
+            
+            latitude = latitude + 0.000001;
+            if (latitude>10.0 || latitude<-10.0){
+              deci_lat = deci_lat + int(latitude/10);
+              latitude = latitude - deci_lat*10;
+            }
+            if (deci_lat != 0){
+              msg = msg + "latitude:" + deci_lat + String(fabs(latitude),6) + "&";
+            }
+            else
+            {
+              msg = msg + "latitude:" + String(latitude,6) + "&";
+            }
             break;
           case 4 :
             tangage += 0.1;
