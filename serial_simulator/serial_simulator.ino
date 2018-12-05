@@ -3,12 +3,13 @@
 int received_byte, i, id, id_sender, id_dest, id_concern;
 String msg, type;
 double vitesse, cap, longitude, latitude, tangage, gite, barre, ecoute;
-bool start;
+bool start, started;
 
 void setup() {
   // put your setup code here, to run once:
   i = -5;
   start = false;
+  started = false;
   vitesse = 0.0;
   cap = 0.0;
   longitude = -4.6129;
@@ -34,7 +35,7 @@ void loop() {
     start = true;
   }
   if (start == true) {
-    if (i <= 5) {
+    if (i <= 5  && started==false) {
       if (i != 0) {
         int key = random(1, 999);
         if (i < 0) {
@@ -51,6 +52,7 @@ void loop() {
       }
     }
     else {
+      started=true;
       message(2);
     }
     delay(1000);
@@ -138,14 +140,10 @@ void message(int mode) {
     id_concern = 1;
     type = "B";
     msg = msg + "__" + key + "&type:" + type + "&id_sender:" + id_sender + "&id_dest:" + id_dest + "&id_concern:" + id_concern + "&";
-    //longitude = longitude + 0.0001;
-    int int_longitude = int(longitude);
-    int decimal_longitude = abs((longitude-int_longitude)*10000);
-    msg = msg + "longitude:" + int_longitude + "." + decimal_longitude + "&";
-    //latitude = latitude + 0.0001;
-    int int_latitude = int(latitude);
-    int decimal_latitude = abs((latitude-int_latitude)*10000);
-    msg = msg + "latitude:" + int_latitude + "." + decimal_latitude + "&";
+    longitude = longitude + 0.000001;
+    msg = msg + "longitude:" + String(longitude,6) + "&";
+    latitude = latitude + 0.000001;
+    msg = msg + "latitude:" + String(latitude,6) + "&";
     msg = msg + key + "//";
     Serial.print(msg);
   }
