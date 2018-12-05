@@ -1,19 +1,21 @@
 #include <math.h>
 
-int received_byte, i, id, id_sender, id_dest, id_concern;
+int received_byte, i, id, id_sender, id_dest, id_concern, deci_lat, deci_long;
 String msg, type;
-double vitesse, cap, longitude, latitude, tangage, gite, barre, ecoute;
+float vitesse, cap, longitude, latitude, tangage, gite, barre, ecoute;
 bool start, started;
 
 void setup() {
   // put your setup code here, to run once:
   i = -5;
+  deci_long = 0;
+  deci_lat = 0;
   start = false;
   started = false;
   vitesse = 0.0;
   cap = 0.0;
-  longitude = -4.6129;
-  latitude = 48.4301;
+  longitude = -4.612900;
+  latitude = 48.430100;
   tangage = 0.0;
   gite = 0.0;
   barre = 0.0;
@@ -141,9 +143,32 @@ void message(int mode) {
     type = "B";
     msg = msg + "__" + key + "&type:" + type + "&id_sender:" + id_sender + "&id_dest:" + id_dest + "&id_concern:" + id_concern + "&";
     longitude = longitude + 0.000001;
+    if (longitude>10.0 || longitude<-10.0){
+      deci_long = deci_long + int(longitude/10);
+      longitude = longitude - deci_long*10;
+    }
+    if (deci_long != 0){
+      msg = msg + "longitude:" + deci_long + String(fabs(longitude),6) + "&";
+    }
+    else
+    {
+      msg = msg + "longitude:" + String(longitude,6) + "&";
+    }
+    
     msg = msg + "longitude:" + String(longitude,6) + "&";
+    
     latitude = latitude + 0.000001;
-    msg = msg + "latitude:" + String(latitude,6) + "&";
+    if (latitude>10.0 || latitude<-10.0){
+      deci_lat = deci_lat + int(latitude/10);
+      latitude = latitude - deci_lat*10;
+    }
+    if (deci_lat != 0){
+      msg = msg + "latitude:" + deci_lat + String(fabs(latitude),6) + "&";
+    }
+    else
+    {
+      msg = msg + "latitude:" + String(latitude,6) + "&";
+    }
     msg = msg + key + "//";
     Serial.print(msg);
   }
