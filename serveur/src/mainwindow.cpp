@@ -121,21 +121,31 @@ void MainWindow::exportDatas() {
  */
 void MainWindow::resetDB() {
     if (!serveur) {
-        isResettingDatabase = true;
+        // Inform the user that the database is going to be reset -> ask for approval
+        QMessageBox msgBox;
+        msgBox.setText("Vous vous apprêtez à réinitialiser la base de données.");
+        msgBox.setInformativeText("Êtes-vous sûr de vouloir effectuer cette action ?");
+        msgBox.setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+        msgBox.setDefaultButton(QMessageBox::No);
 
-        cout << "resetDB" << endl;
-        serveur = new ServeurTcp();
+        switch (msgBox.exec()) {
+            case QMessageBox::Yes:
+                isResettingDatabase = true;
 
-        // Reset the database
-        QSqlError err = serveur->resetDb();
-        if (err.type() == QSqlError::NoError)
-            QMessageBox::information(this, "Succès", "La base de données a été réinitialisée avec succès");
-        else
-            QMessageBox::information(this, "Erreur", err.text());
+                serveur = new ServeurTcp();
 
-        // Close the server
-        delete serveur;
-        serveur = nullptr;
+                // Reset the database
+                QSqlError err = serveur->resetDb();
+                if (err.type() == QSqlError::NoError)
+                    QMessageBox::information(this, "Succès", "La base de données a été réinitialisée avec succès");
+                else
+                    QMessageBox::information(this, "Erreur", err.text());
+
+                // Close the server
+                delete serveur;
+                serveur = nullptr;
+                break;
+        }
     }
 }
 
