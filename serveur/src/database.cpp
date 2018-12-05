@@ -105,6 +105,26 @@ QSqlError Database::insertInDatabase(Message msg) {
 }
 
 /**
+ * @brief Database::exportAllDatasOf
+ * @return QSqlQuery
+ */
+QSqlQuery Database::exportAllDatasOf(int id) {
+    // Initiate a transaction
+    db.transaction();
+
+    // Insert in database
+    QSqlQuery query(db);
+
+    // Execute the query
+    if (query.exec("SELECT * FROM " + ELEMENTS + " WHERE id_sender=" + QString::number(id)))
+        db.commit(); // Commit changes
+    else
+        db.rollback(); // Else rollback changes
+
+    return query;
+}
+
+/**
  * METHOD
  *
  * @brief Database::bindValues : TODO

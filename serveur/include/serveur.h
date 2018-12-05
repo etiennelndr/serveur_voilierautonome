@@ -29,6 +29,13 @@ class ServeurTcp : public QTcpServer {
         ~ServeurTcp();
         void start_uart();
 
+        // Resetting the database
+        QSqlError resetDb();
+        // Exporting datas
+        QString exportDatas(int);
+
+        Database* getDb();
+
     public slots:
 		void demandeConnexion();
         void readDataFromTCPIP();
@@ -80,6 +87,8 @@ class ServeurTcp : public QTcpServer {
         // Database to store each message
         Database* db;
 };
+
+inline Database* ServeurTcp::getDb() { return this->db; }
 
 
 #endif // SERVEUR_H

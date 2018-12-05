@@ -35,11 +35,16 @@ class MainWindow : public QMainWindow {
 
         ServeurTcp* serveur=nullptr;
 
+        bool isResettingDatabase;
+        bool isExportingDatabase;
+
     public slots:
         void state();
         void msg_processing(QString msg);
         void start_uart();
+        // Exporting datas
         void exportDatas();
+        // Reseting the database
         void resetDB();
 };
 
