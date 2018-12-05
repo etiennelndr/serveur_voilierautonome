@@ -9,6 +9,14 @@ void setup() {
   // put your setup code here, to run once:
   i = -5;
   start = false;
+  vitesse = 0.0;
+  cap = 0.0;
+  longitude = -4.6129;
+  latitude = 48.4301;
+  tangage = 0.0;
+  gite = 0.0;
+  barre = 0.0;
+  ecoute = 0.0;
   Serial.begin(9600);
 }
 
@@ -43,83 +51,104 @@ void loop() {
       }
     }
     else {
-      message();
+      message(2);
     }
     delay(1000);
     i++;
   }
 }
 
-void message() {
+void message(int mode) {
   msg = "";
-  //Make the random really random
-  randomSeed(i);
-  int key = random(1, 999);
-  int choice;
-  id = random(-5, 5);
-  id_sender = id;
-  id_dest = 0;
-  id_concern = id;
-  if (id != 0) {
-    if (id > 0) {
-      //It is a boat
-      type = "B";
-      msg = msg + "__" + key + "&type:" + type + "&id_sender:" + id_sender + "&id_dest:" + id_dest + "&id_concern:" + id_concern + "&";
-      choice = random(1, 8);
-      switch (choice) {
-        case 1 :
-          vitesse = randomDouble(0.0, 100.0);
-          msg = msg + "vitesse:" + vitesse + "&";
-          break;
-        case 2 :
-          cap = randomDouble(0.0, 100.0);
-          msg = msg + "cap:" + cap + "&";
-          break;
-        case 3 :
-          longitude = randomDouble(0.0, 100.0);
-          msg = msg + "longitude:" + longitude + "&";
-          latitude = randomDouble(0.0, 100.0);
-          msg = msg + "latitude:" + latitude + "&";
-          break;
-        case 4 :
-          tangage = randomDouble(0.0, 100.0);
-          msg = msg + "tangage:" + tangage + "&";
-          break;
-        case 5 :
-          gite = randomDouble(0.0, 100.0);
-          msg = msg + "gite:" + gite + "&";
-          break;
-        case 6 :
-          barre = randomDouble(0.0, 100.0);
-          msg = msg + "barre:" + barre + "&";
-          break;
-        case 7 :
-          ecoute = randomDouble(0.0, 100.0);
-          msg = msg + "ecoute:" + ecoute + "&";
-          break;
 
+  if(mode==1){
+    //Make the random really random
+    randomSeed(i);
+    int key = random(1, 999);
+    int choice;
+    id = random(-5, 5);
+    id_sender = id;
+    id_dest = 0;
+    id_concern = id;
+    if (id != 0) {
+      if (id > 0) {
+        //It is a boat
+        type = "B";
+        msg = msg + "__" + key + "&type:" + type + "&id_sender:" + id_sender + "&id_dest:" + id_dest + "&id_concern:" + id_concern + "&";
+        choice = random(1, 8);
+        switch (choice) {
+          case 1 :
+            vitesse += 0.1;
+            msg = msg + "vitesse:" + vitesse + "&";
+            break;
+          case 2 :
+            cap -= 0.1;
+            msg = msg + "cap:" + cap + "&";
+            break;
+          case 3 :
+            longitude = longitude + 0.0001;
+            msg = msg + "longitude:" + longitude + "&";
+            latitude = latitude + 0.0001;
+            msg = msg + "latitude:" + latitude + "&";
+            break;
+          case 4 :
+            tangage += 0.1;
+            msg = msg + "tangage:" + tangage + "&";
+            break;
+          case 5 :
+            gite += 0.1;
+            msg = msg + "gite:" + gite + "&";
+            break;
+          case 6 :
+            barre += 0.1;
+            msg = msg + "barre:" + barre + "&";
+            break;
+          case 7 :
+            ecoute += 0.1;
+            msg = msg + "ecoute:" + ecoute + "&";
+            break;
+  
+        }
       }
-    }
-    else if (id < 0) {
-      //It is a weather station
-      type = "M";
-      msg = msg + "__" + key + "&type:" + type + "&id_sender:" + id_sender + "&id_dest:" + id_dest + "&id_concern:" + id_concern + "&";
-      choice = random(1, 3);
-      switch (choice) {
-        case 1 :
-          vitesse = randomDouble(0.0, 100.0);
-          msg = msg + "%svitesse:" + vitesse + "&";
-          break;
-        case 2 :
-          cap = randomDouble(0.0, 100.0);
-          msg = msg + "cap:" + cap + "&";
-          break;
+      else if (id < 0) {
+        //It is a weather station
+        type = "M";
+        msg = msg + "__" + key + "&type:" + type + "&id_sender:" + id_sender + "&id_dest:" + id_dest + "&id_concern:" + id_concern + "&";
+        choice = random(1, 3);
+        switch (choice) {
+          case 1 :
+            vitesse = randomDouble(0.0, 100.0);
+            msg = msg + "%svitesse:" + vitesse + "&";
+            break;
+          case 2 :
+            cap = randomDouble(0.0, 100.0);
+            msg = msg + "cap:" + cap + "&";
+            break;
+        }
       }
+      msg = msg + key + "//";
+      Serial.print(msg);
     }
+    //Do nothing, it is the id of the serveur(0)
+  }
+  else if (mode==2){
+    int key = random(1, 999);
+    id_sender = 1;
+    id_dest = 0;
+    id_concern = 1;
+    type = "B";
+    msg = msg + "__" + key + "&type:" + type + "&id_sender:" + id_sender + "&id_dest:" + id_dest + "&id_concern:" + id_concern + "&";
+    //longitude = longitude + 0.0001;
+    int int_longitude = int(longitude);
+    int decimal_longitude = abs((longitude-int_longitude)*10000);
+    msg = msg + "longitude:" + int_longitude + "." + decimal_longitude + "&";
+    //latitude = latitude + 0.0001;
+    int int_latitude = int(latitude);
+    int decimal_latitude = abs((latitude-int_latitude)*10000);
+    msg = msg + "latitude:" + int_latitude + "." + decimal_latitude + "&";
     msg = msg + key + "//";
     Serial.print(msg);
   }
-  //Do nothing, it is the id of the serveur(0)
 }
 
 double randomDouble(double minf, double maxf)

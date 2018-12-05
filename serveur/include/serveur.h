@@ -24,7 +24,7 @@ using std::string;
 class ServeurTcp : public QTcpServer {
     Q_OBJECT
     public:
-        ServeurTcp(quint16 port);
+        ServeurTcp(quint16 port, int uart_port);
         ServeurTcp();
         ~ServeurTcp();
         void start_uart();
