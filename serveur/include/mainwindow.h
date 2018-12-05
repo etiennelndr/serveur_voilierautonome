@@ -29,11 +29,11 @@ class MainWindow : public QMainWindow {
         QString get_msg();
 
     private:
-        Ui::MainWindow* ui;
+        Ui::MainWindow* ui = nullptr;
     //    QPlainTextEdit *_konsole;
-        QLineEdit *_msg;
+        QLineEdit *_msg = nullptr;
 
-        ServeurTcp* serveur=nullptr;
+        ServeurTcp* serveur= nullptr;
 
         bool isResettingDatabase;
         bool isExportingDatabase;

@@ -24,7 +24,7 @@ class SerialData : public QObject {
         // Avoid simple creation of SerialData
         SerialData();
 
-        QSerialPort* mPort;
+        QSerialPort* mPort = nullptr;
 
         QString port;
 

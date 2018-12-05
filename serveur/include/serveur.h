@@ -50,7 +50,7 @@ class ServeurTcp : public QTcpServer {
 	    QList<QTcpSocket *> clients;
         quint16             tailleMessage;
         // UART connection for the weathers stations and the boats
-        SerialData *uart;
+        SerialData *uart = nullptr;
 
         void sendDataToUART(Message);
         void sendDataToTCP(Message msg, int id_client);
@@ -85,7 +85,7 @@ class ServeurTcp : public QTcpServer {
         bool checkConnectionTCPIP(Message, QTcpSocket*);
 
         // Database to store each message
-        Database* db;
+        Database* db = nullptr;
 };
 
 inline Database* ServeurTcp::getDb() { return this->db; }

@@ -27,6 +27,9 @@
    <layout class="QVBoxLayout" name="verticalLayout_3">
     <item>
      <widget class="QPushButton" name="UARTsimulator">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="text">
        <string>Relancer le simulateur UART</string>
       </property>
@@ -34,6 +37,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="lancement_serveur">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="text">
        <string>Lancement Serveur + Simulateur UART</string>
       </property>
@@ -57,6 +63,9 @@
        </item>
        <item>
         <widget class="QSpinBox" name="COM">
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
+         </property>
          <property name="minimum">
           <number>1</number>
          </property>
@@ -82,10 +91,16 @@
         <height>16777215</height>
        </size>
       </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
      </widget>
     </item>
     <item>
      <widget class="QPushButton" name="button_resetDB">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="text">
        <string>Reset Database</string>
       </property>
@@ -113,6 +128,9 @@
         <widget class="QPushButton" name="button_exportDatas">
          <property name="enabled">
           <bool>true</bool>
+         </property>
+         <property name="cursor">
+          <cursorShape>PointingHandCursor</cursorShape>
          </property>
          <property name="text">
           <string>Export datas</string>
@@ -143,7 +161,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>20</height>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu">
