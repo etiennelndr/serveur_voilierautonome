@@ -20,7 +20,7 @@ ServeurTcp::ServeurTcp() {
  * @brief ServeurTcp::ServeurTcp : TODO
  * @param port
  */
-ServeurTcp::ServeurTcp(quint16 port) {
+ServeurTcp::ServeurTcp(quint16 port, int uart_port) {
     // Open the connection
 	if (!(listen(QHostAddress::Any, port))) {
         cout << "Server: OFF" << endl;
@@ -30,7 +30,7 @@ ServeurTcp::ServeurTcp(quint16 port) {
     }
 
     // Create the UART
-    uart = new SerialData(QString("COM5"), nullptr);
+    uart = new SerialData(QString::fromStdString("COM" + to_string(uart_port)), nullptr);
     // Connect it -> when receivedDataFromUART signal is emitted, call readDataFromUART slot
     connect(uart, SIGNAL(receivedDataFromUART(Message)), this, SLOT(readDataFromUART(Message)));
 
@@ -165,15 +165,15 @@ bool ServeurTcp::checkConnectionUART(Message msg) {
     if (*msg.getType() == "MC") {
         // Connection d'une station météo
         addNewWeatherStation(msg);
-        Message* message = new Message();
-        message->setIdConcern(msg.copy().getIdConcern()); //Signaler a tous les postes la connexion d'une nouvelle station meteo
-        sendToAll(message->copy(),true);
+//        Message* message = new Message();
+//        message->setIdConcern(msg.copy().getIdConcern()); //Signaler a tous les postes la connexion d'une nouvelle station meteo
+//        sendToAll(message->copy(),true);
     } else if (*msg.getType() == "BC") {
         // Connection d'un bateau
         addNewBoat(msg);
-        Message* message = new Message();
-        message->setIdConcern(msg.copy().getIdConcern()); //Signaler a tous les postes la connexion d'un nouveau bateau
-        sendToAll(message->copy(),true);
+//        Message* message = new Message();
+//        message->setIdConcern(msg.copy().getIdConcern()); //Signaler a tous les postes la connexion d'un nouveau bateau
+//        sendToAll(message->copy(),true);
     }
 
     return true;
@@ -213,17 +213,17 @@ bool ServeurTcp::checkConnectionTCPIP(Message data, QTcpSocket* socket) {
 
     cout << "Nouveau client :" << *data.getIdSender() << endl;
 
-    Message* msg = new Message();
-    msg->setType(new string("S"));
-    msg->setIdSender(new int(0));
-    for (unsigned int i=0; i<boats.size();i++){ //Envoyer au nouveau client les bateaux deja enregistres
-        msg->setIdConcern(new int(boats.at(i).get_id()));
-        sendToComputer(msg->copy(), *data.getIdConcern());
-    }
-    for (unsigned int i=0; i<weatherStations.size();i++){ //Envoyer au nouveau client les stations meteo deja enregistres
-        msg->setIdConcern(new int(weatherStations.at(i).get_id()));
-        sendToComputer(msg->copy(), *data.getIdConcern());
-    }
+//    Message* msg = new Message();
+//    msg->setType(new string("S"));
+//    msg->setIdSender(new int(0));
+//    for (unsigned int i=0; i<boats.size();i++){ //Envoyer au nouveau client les bateaux deja enregistres
+//        msg->setIdConcern(new int(boats.at(i).get_id()));
+//        sendToComputer(msg->copy(), *data.getIdConcern());
+//    }
+//    for (unsigned int i=0; i<weatherStations.size();i++){ //Envoyer au nouveau client les stations meteo deja enregistres
+//        msg->setIdConcern(new int(weatherStations.at(i).get_id()));
+//        sendToComputer(msg->copy(), *data.getIdConcern());
+//    }
 
     return true;
 }

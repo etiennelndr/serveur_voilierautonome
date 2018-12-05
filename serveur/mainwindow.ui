@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>600</height>
+    <width>499</width>
+    <height>602</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -20,8 +20,44 @@
    <string>Serveur</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QFormLayout" name="formLayout">
-    <item row="3" column="1">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <widget class="QPushButton" name="UARTsimulator">
+      <property name="text">
+       <string>Relancer le simulateur UART</string>
+      </property>
+     </widget>
+    </item>
+    <item alignment="Qt::AlignHCenter">
+     <widget class="QWidget" name="widget_uart" native="true">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>30</height>
+       </size>
+      </property>
+      <layout class="QHBoxLayout" name="horizontalLayout_5">
+       <item>
+        <widget class="QLabel" name="label_uart">
+         <property name="text">
+          <string>Port UART (n° COM)</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSpinBox" name="COM"/>
+       </item>
+      </layout>
+     </widget>
+    </item>
+    <item>
+     <widget class="QPushButton" name="lancement_serveur">
+      <property name="text">
+       <string>Lancement Serveur + Simulateur UART</string>
+      </property>
+     </widget>
+    </item>
+    <item>
      <widget class="QTextEdit" name="konsole">
       <property name="enabled">
        <bool>true</bool>
@@ -43,28 +79,14 @@
       </property>
      </widget>
     </item>
-    <item row="2" column="1">
-     <widget class="QPushButton" name="lancement_serveur">
-      <property name="text">
-       <string>Lancement Serveur + Simulateur UART</string>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="1">
-     <widget class="QPushButton" name="UARTsimulator">
-      <property name="text">
-       <string>Relancer le simulateur UART</string>
-      </property>
-     </widget>
-    </item>
-    <item row="4" column="1">
+    <item>
      <widget class="QPushButton" name="button_resetDB">
       <property name="text">
        <string>Reset Database</string>
       </property>
      </widget>
     </item>
-    <item row="5" column="1">
+    <item>
      <widget class="QPushButton" name="button_exportDatas">
       <property name="text">
        <string>Export datas</string>
@@ -78,7 +100,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>499</width>
      <height>20</height>
     </rect>
    </property>
