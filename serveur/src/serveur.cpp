@@ -189,6 +189,7 @@ bool ServeurTcp::checkConnectionUART(Message msg) {
  * @param id_socket
  */
 void ServeurTcp::sendDataToTCP(Message msg, int id_socket) {
+    qDebug() << msg.encodeData();
     // Préparation du paquet
     QByteArray paquet;
     QDataStream out(&paquet, QIODevice::WriteOnly);
@@ -393,7 +394,6 @@ void ServeurTcp::transferDataFromUARTToComputersAndBoats(Message msg){
  * @return bool
  */
 bool ServeurTcp::filterMessageFromBoat(Message original, Message* for_all){
-    cout << "filterMessageFromBoat" << endl;
     bool result=false;
     if(original.getLongitude()) {
         for_all->setLongitude(original.getLongitude());
@@ -416,6 +416,7 @@ bool ServeurTcp::filterMessageFromBoat(Message original, Message* for_all){
         for_all->setIdDest(original.getIdDest());
         for_all->setIdConcern(original.getIdConcern());
     }
+    //qDebug() << *for_all->getLongitude() << " / " << *for_all->getLatitude();
     return result;
 }
 

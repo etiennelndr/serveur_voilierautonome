@@ -88,8 +88,8 @@ void loop() {
         tangage_bat2 = -3.0f;
         gite_bat1 = -5.0f;
         gite_bat2 = 4.0f;
-        barre_bat1 = 0.0f;
-        barre_bat2 = 0.0f;
+        barre_bat1 = 10.0f;
+        barre_bat2 = -10.0f;
         ecoute_bat1 = 25.0f;
         ecoute_bat2 = 32.0f;
       }
