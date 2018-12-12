@@ -21,30 +21,18 @@ Message::Message() {
  * @brief Message::~Message : Destructor for Message class
  */
 Message::~Message() {
-    if (type)
-        delete type;
-    if (id_sender)
-        delete id_sender;
-    if (id_dest)
-        delete id_dest;
-    if (id_concern)
-        delete id_concern;
-    if (longitude)
-        delete longitude;
-    if (latitude)
-        delete latitude;
-    if (cap)
-        delete cap;
-    if (vitesse)
-        delete vitesse;
-    if (gite)
-        delete gite;
-    if (tangage)
-        delete tangage;
-    if (barre)
-        delete barre;
-    if (ecoute)
-        delete ecoute;
+	delete type;
+	delete id_sender;
+	delete id_dest;
+	delete id_concern;
+	delete longitude;
+	delete latitude;
+	delete cap;
+	delete vitesse;
+	delete gite;
+	delete tangage;
+	delete barre;
+	delete ecoute;
 }
 
 /*--------------------------*
@@ -166,33 +154,6 @@ void Message::decodeData(QString msg) {
  * @return
  */
 bool Message::verifyMessage(string data, string debut, string fin) {
-    //std::cout << data << " / " << debut << " / " << fin << std::endl;
-    if(debut.length()                           > 6){
-        qDebug() << "error : length of debut";
-        qDebug() << debut.length();
-    }
-    if(fin.length()                             > 6){
-        qDebug() << "error : length of fin";
-        qDebug() << fin.length();
-    }
-    if(debut.substr(0, 2)                       != SEPARATOR_DEBUT){
-        qDebug() << "error : debut not correct";
-        std::cout << "       " << debut.substr(0,2) << "!=" << SEPARATOR_DEBUT << "       "  << std::endl;
-    }
-    if(fin.substr(fin.length()-2, fin.length()) != SEPARATOR_FIN){
-        qDebug() << "error : fin not correct";
-        std::cout << fin.substr(fin.length()-2, fin.length()) << "!=" << SEPARATOR_FIN << std::endl;
-    }
-    if(debut.substr(2, debut.length())          != fin.substr(0, fin.length()-2))
-        qDebug() << "error : unknown";
-    if(data.find("id_sender:")                  == string::npos)
-        qDebug() << "error : id_sender";
-    if(data.find("id_concern:")                 == string::npos)
-        qDebug() << "error : id_concern";
-    if(data.find("id_dest:")                    == string::npos)
-        qDebug() << "error : id_dest";
-    if(data.find("type:")                       == string::npos)
-        qDebug() << "error : type";
     return debut.length()                           > 6
         || fin.length()                             > 6
         || debut.substr(0, 2)                       != SEPARATOR_DEBUT
