@@ -60,3 +60,8 @@ build-serveur-Desktop_Qt_5_8_0_MinGW_32bit-Debug/voilierautonome
 *.csv#
 *.lnk
 *.ipch
+*.vcxproj
+*.filters
+*.log
+*.tlog
+*.pdb
