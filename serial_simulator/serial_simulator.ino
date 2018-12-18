@@ -145,7 +145,7 @@ void message(int mode) {
             deci_long_bat1 = deci_long_bat1 + int(longitude_bat1/10.0f);
             longitude_bat1 = longitude_bat1 - float((deci_long_bat1)*10);
           }
-          longitude_bat1 = longitude_bat1 + 0.000001f;
+          longitude_bat1 = longitude_bat1 + 0.000005f;
           if (deci_long_bat1 != 0){ msg = msg + "longitude:" + deci_long_bat1 + String(fabs(longitude_bat1),6) + "&";}
           else {msg = msg + "longitude:" + String(longitude_bat1,6) + "&";}
         } else {
@@ -153,7 +153,7 @@ void message(int mode) {
             deci_long_bat2 = deci_long_bat2 + int(longitude_bat2/10.0f);
             longitude_bat2 = longitude_bat2 - float((deci_long_bat2)*10);
           }
-          longitude_bat2 = longitude_bat2 + 0.000001f;
+          longitude_bat2 = longitude_bat2 + 0.000005f;
           if (deci_long_bat2 != 0){ msg = msg + "longitude:" + deci_long_bat2 + String(fabs(longitude_bat2),6) + "&";}
           else {msg = msg + "longitude:" + String(longitude_bat2,6) + "&";}
         }
@@ -165,7 +165,7 @@ void message(int mode) {
             deci_lat_bat1 = deci_lat_bat1 + int(latitude_bat1/10.0f);
             latitude_bat1 = latitude_bat1 - float((deci_lat_bat1)*10);
           }
-          latitude_bat1 = latitude_bat1 + 0.000001f;
+            latitude_bat1 = latitude_bat1 + 0.000005f;
           if (deci_lat_bat1 != 0){ msg = msg + "latitude:" + deci_lat_bat1 + String(fabs(latitude_bat1),6) + "&";}
           else {msg = msg + "latitude:" + String(latitude_bat1,6) + "&";}
         } else {
@@ -173,7 +173,7 @@ void message(int mode) {
             deci_lat_bat2 = deci_lat_bat2 + int(latitude_bat2/10.0f);
             latitude_bat2 = latitude_bat2 - float((deci_lat_bat2)*10);
           }
-          latitude_bat2 = latitude_bat2 + 0.000001f;
+          latitude_bat2 = latitude_bat2 + 0.000005f;
           if (deci_lat_bat2 != 0){ msg = msg + "latitude:" + deci_lat_bat2 + String(fabs(latitude_bat2),6) + "&";}
           else {msg = msg + "latitude:" + String(latitude_bat2,6) + "&";}
         }

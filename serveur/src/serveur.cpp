@@ -75,7 +75,7 @@ void ServeurTcp::start_uart(){
 /**
  * METHOD
  *
- * @brief ServeurTcp::sendToAll : send to all TCP/IP clients (members of computers vector)
+ * @brief ServeurTcp::sendToAll : send to all TCP/IP clients (members of computers vector) and UART
  * @param message
  */
 void ServeurTcp::sendToAll(Message message, bool _computers=false, bool _boats=false, bool _weatherStations=false, int id_boat_exception=0, int id_computer_exception=0) {
@@ -189,15 +189,20 @@ bool ServeurTcp::checkConnectionUART(Message msg) {
  * @param id_socket
  */
 void ServeurTcp::sendDataToTCP(Message msg, int id_socket) {
-    qDebug() << msg.encodeData();
-    // Préparation du paquet
-    QByteArray paquet;
-    QDataStream out(&paquet, QIODevice::WriteOnly);
-    out << quint16(0);    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
-    out << msg.encodeData();        // On ajoute le message à la suite
-    out.device()->seek(0); // On se replace au début du paquet
-    out << quint16((paquet.size() - int(sizeof(quint16)))); // On écrase le 0 qu'on avait réservé par la longueur du message
-    clients[id_socket]->write(paquet);
+    try{
+        qDebug() << msg.encodeData();
+        // Préparation du paquet
+        QByteArray paquet;
+        QDataStream out(&paquet, QIODevice::WriteOnly);
+        out << quint16(0);    // On écrit 0 au début du paquet pour réserver la place pour écrire la taille
+        out << msg.encodeData();        // On ajoute le message à la suite
+        out.device()->seek(0); // On se replace au début du paquet
+        out << quint16((paquet.size() - int(sizeof(quint16)))); // On écrase le 0 qu'on avait réservé par la longueur du message
+        clients[id_socket]->write(paquet);
+    }
+    catch (int e){
+        qDebug() << "An exception occurred. Exception Nr. " << e;
+    }
 }
 
 /**

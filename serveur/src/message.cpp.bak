@@ -177,38 +177,27 @@ void Message::assignValueToCorrectAttribute(string& data) {
 
     if (dataAndValue[0] == "type") {
         type = new string(dataAndValue[1]);
-    }
-    else if (dataAndValue[0] == "id_sender") {
+    } else if (dataAndValue[0] == "id_sender") {
         id_sender = new int(stoi(dataAndValue[1]));
-    }
-    else if (dataAndValue[0] == "id_dest") {
+    } else if (dataAndValue[0] == "id_dest") {
         id_dest = new int(stoi(dataAndValue[1]));
-    }
-    else if (dataAndValue[0] == "id_concern") {
+    } else if (dataAndValue[0] == "id_concern") {
         id_concern = new int(stoi(dataAndValue[1]));
-    }
-    else if (dataAndValue[0] == "longitude") {
+    } else if (dataAndValue[0] == "longitude") {
         longitude = new float(stof(dataAndValue[1]));
-    }
-    else if (dataAndValue[0] == "latitude") {
+    } else if (dataAndValue[0] == "latitude") {
         latitude = new float(stof(dataAndValue[1]));
-    }
-    else if (dataAndValue[0] == "cap") {
+    } else if (dataAndValue[0] == "cap") {
         cap = new float(stof(dataAndValue[1]));
-    }
-    else if (dataAndValue[0] == "vitesse") {
+    } else if (dataAndValue[0] == "vitesse") {
         vitesse = new float(stof(dataAndValue[1]));
-    }
-    else if (dataAndValue[0] == "gite") {
+    } else if (dataAndValue[0] == "gite") {
         gite = new float(stof(dataAndValue[1]));
-    }
-    else if (dataAndValue[0] == "tangage") {
+    } else if (dataAndValue[0] == "tangage") {
         tangage = new float(stof(dataAndValue[1]));
-    }
-    else if (dataAndValue[0] == "barre") {
+    } else if (dataAndValue[0] == "barre") {
         barre = new float(stof(dataAndValue[1]));
-    }
-    else if (dataAndValue[0] == "ecoute") {
+    } else if (dataAndValue[0] == "ecoute") {
         ecoute = new float(stof(dataAndValue[1]));
     }
 }
@@ -254,10 +243,10 @@ Message Message::copy() {
 		m.setTangage(new float(*tangage));
 	}
 	if (barre) {
-		m.setBarre(new float(*barre));
+	    m.setBarre(new float(*barre));
 	}
 	if (ecoute) {
-		m.setEcoute(new float(*ecoute));
+	    m.setEcoute(new float(*ecoute));
 	}
 	
 	return m;
