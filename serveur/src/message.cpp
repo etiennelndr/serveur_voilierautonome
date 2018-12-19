@@ -217,7 +217,6 @@ void Message::assignValueToCorrectAttribute(string& data) {
  * METHOD
  *
  * @brief copy : return a copy of this object
- * @param m
  * @return
  */
 Message Message::copy() {

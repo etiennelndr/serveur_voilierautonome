@@ -166,13 +166,13 @@ bool ServeurTcp::checkConnectionUART(Message msg) {
 
     if (*msg.getType() == "MC") {
         // Connection d'une station météo
-        addNewWeatherStation(msg);
+        addNewWeatherStation(msg.copy());
 //        Message* message = new Message();
 //        message->setIdConcern(msg.copy().getIdConcern()); //Signaler a tous les postes la connexion d'une nouvelle station meteo
 //        sendToAll(message->copy(),true);
     } else if (*msg.getType() == "BC") {
         // Connection d'un bateau
-        addNewBoat(msg);
+        addNewBoat(msg.copy());
 //        Message* message = new Message();
 //        message->setIdConcern(msg.copy().getIdConcern()); //Signaler a tous les postes la connexion d'un nouveau bateau
 //        sendToAll(message->copy(),true);
@@ -381,7 +381,7 @@ void ServeurTcp::transferDataFromUARTToComputersAndBoats(Message msg){
         sendToComputer(msg.copy(), *msg.getIdConcern());
         // Send longitude and latitude to other boats and computers
         if(filterMessageFromBoat(msg.copy(), &msg_for_all)) {
-            sendToAll(msg_for_all, true, true, false, *msg.getIdConcern(), *msg.getIdConcern());
+            sendToAll(msg_for_all.copy(), true, true, false, *msg.getIdConcern(), *msg.getIdConcern());
         }
     } else if (*msg.getIdConcern() < 0) {
         treatBoatDatas(msg.copy());
@@ -401,25 +401,25 @@ void ServeurTcp::transferDataFromUARTToComputersAndBoats(Message msg){
 bool ServeurTcp::filterMessageFromBoat(Message original, Message* for_all){
     bool result=false;
     if(original.getLongitude()) {
-        for_all->setLongitude(original.getLongitude());
+        for_all->setLongitude(new float(*original.getLongitude()));
         result=true;
     }
 
     if(original.getLatitude()) {
-        for_all->setLatitude(original.getLatitude());
+        for_all->setLatitude(new float(*original.getLatitude()));
         result=true;
     }
 
     if(original.getCap()) {
-        for_all->setCap(original.getCap());
+        for_all->setCap(new float(*original.getCap()));
         result=true;
     }
 
     if(result) {
-        for_all->setType(original.getType());
-        for_all->setIdSender(original.getIdSender());
-        for_all->setIdDest(original.getIdDest());
-        for_all->setIdConcern(original.getIdConcern());
+        for_all->setType(new string(*original.getType()));
+        for_all->setIdSender(new int(*original.getIdSender()));
+        for_all->setIdDest(new int(*original.getIdDest()));
+        for_all->setIdConcern(new int(*original.getIdConcern()));
     }
     //qDebug() << *for_all->getLongitude() << " / " << *for_all->getLatitude();
     return result;
