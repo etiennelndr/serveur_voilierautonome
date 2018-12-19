@@ -180,37 +180,37 @@ void message(int mode) {
 
         //TANGAGE
         if(id==1){
-          tangage_bat1 = tangage_bat1 + 0.1f;
+          tangage_bat1 = tangage_bat1 + 2.0;
           msg = msg + "tangage:" + tangage_bat1 + "&";
         } else {
-          tangage_bat2 = tangage_bat2 + 0.1f;
+          tangage_bat2 = tangage_bat2 + 2.0;
           msg = msg + "tangage:" + tangage_bat2 + "&";
         }
 
         //GITE
         if(id==1){
-          gite_bat1 = gite_bat1 + 0.1f;
+          gite_bat1 = gite_bat1 +2.0;
           msg = msg + "gite:" + gite_bat1 + "&";
         } else {
-          gite_bat2 = gite_bat2 + 0.1f;
+          gite_bat2 = gite_bat2 + 2.0;
           msg = msg + "gite:" + gite_bat2 + "&";
         }
         
         //BARRE
         if(id==1){
-          barre_bat1 = barre_bat1 + 0.1f;
+          barre_bat1 = barre_bat1 + 2.0;
           msg = msg + "barre:" + barre_bat1 + "&";
         } else {
-          barre_bat2 = barre_bat2 + 0.1f;
+          barre_bat2 = barre_bat2 + 2.0;
           msg = msg + "barre:" + barre_bat2 + "&";
         }
 
         //ECOUTE
         if(id==1){
-          ecoute_bat1 = ecoute_bat1 + 0.1f;
+          ecoute_bat1 = ecoute_bat1 + 2.0f;
           msg = msg + "ecoute:" + ecoute_bat1 + "&";
         } else {
-          ecoute_bat2 = ecoute_bat2 + 0.1f;
+          ecoute_bat2 = ecoute_bat2 + 2.0f;
           msg = msg + "ecoute:" + ecoute_bat2 + "&";
         }
       }
