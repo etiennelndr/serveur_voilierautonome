@@ -17,7 +17,7 @@ git clone https://github.com/etiennelndr/serveur_voilierautonome.git
 Logiciels à télécharger
 =======================
 
-Afin de pouvoir utiliser correctement cette partie du serveur vous devez télécharger **Qt 5.12** ainsi que **QtCreator** 
+Afin de pouvoir utiliser correctement cette partie du projet vous devez télécharger **Qt 5.12** ainsi que **QtCreator** 
 qui sont disponibles [ici](https://www.qt.io/download).
 
 De plus, afin de pouvoir lancer la simulation vous devez télécharger **Arduino** qui est téléchargeable à cette [adresse](https://www.arduino.cc/en/main/software).
