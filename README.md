@@ -28,4 +28,4 @@ Lancement du serveur
 
 Pour lancer le serveur il vous suffit d'exécuter le programme QtCreator et d'ouvrir le fichier **serveur.pro** présent dans
 le dépôt GitHub que vous venez de cloner en local. Suite à cela, vous n'avez plus qu'à exécuter QMake, à compiler et à lancer
-le programme.
+le programme. N'oubliez pas de **lancer la simulation Arduino** afin de pouvoir recevoir des trames UART.
