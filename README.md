@@ -39,5 +39,5 @@ différentes stations météo ou des bateaux.
 Afin d'utiliser correctement cette simulation vous devez lancer le logiciel Arduino précédemment téléchargé et ouvrir le code 
 **serial_simulator/serial_simulator.ino** présent dans ce dépôt. Suite à cela, vous devez vérifier puis téléverser le code
 en vérifiant auparavant que votre carte Arduino est bien branchée et que le bon port COM est utilisé par le logiciel. Après cela,
-cliquez sur **Outils > Moniteur série** (Ctrl + Maj + M), tapez la lettre r et faites "Entrée". La simulation est démarrée, vous 
-n'avez plus qu'à fermer le moniteur série et retourner sur le programme du serveur afin de le lancer.
+cliquez sur **Outils > Moniteur série** (Ctrl + Maj + M), tapez la lettre r et faites "Entrée". La simulation est démarrée : vous 
+pouvez désormais fermer le moniteur série et retourner sur le programme du serveur afin de le lancer.
